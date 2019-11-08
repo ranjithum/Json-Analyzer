@@ -27,8 +27,8 @@ Execute `git submodule update --init` to get the files of thirdparty submodules.
 
 Create directory called `build`.
 
-Change to `build` directory and run `cmake ..`.
-
-For building with test use `cmake .. -DBuildTest=ON`.
+Change to `build` directory and run `cmake ..` (For building with test use `cmake .. -DBuildTest=ON`).
 
 Once built you should be able to see `libjson_analyzer.so` library.
+
+> Note :- Above command have been tested on Ubuntu 18.04.
