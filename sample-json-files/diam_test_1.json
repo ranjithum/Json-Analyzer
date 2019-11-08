@@ -1,0 +1,341 @@
+[
+	{
+		"method": "object.updated",
+		"params": {
+			"type": "session",
+			"oldObject": {
+				"gxRules": [
+					{
+						"ruleName": "DEF_4_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_SOS_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_T2TV_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_ZVOOQ_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "FREE_RUSSIA_TRAFFIC",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					}
+				],
+				"shapingUL": 64000000,
+				"shapingDL": 256000000,
+				"uli": {
+					"string": "8252f002452f52f0020845fa0c",
+					"glt": 130,
+					"mcc": 250,
+					"mnc": 20,
+					"lac": null,
+					"ci": null,
+					"sac": null,
+					"rac": null,
+					"tac": 17711,
+					"eci": 138803724,
+					"lacCi": null,
+					"lacSac": null,
+					"lacRac": null
+				},
+				"sessionId": "10.131.5.151",
+				"sgsn": "185.77.16.5",
+				"sgsnmccmnc": {
+					"string": "25020",
+					"mcc": 250,
+					"mnc": 20
+				},
+				"rat": 1004,
+				"gxOriginHost": "pcrf01.nsk01.nsk.tele2.epc.mnc020.mcc250.3gppnetwork.org",
+				"gxOriginRealm": "epc.mnc020.mcc250.3gppnetwork.org",
+				"apn": "tms-nsk.tele2.ru",
+				"ccCounter": 15,
+				"ccSessionId": 6735521524974739938,
+				"flags": 536871136,
+				"imeisv": {
+					"string": "8614000362838478",
+					"tac": 86140003,
+					"snr": 628384,
+					"svn": 78
+				},
+				"pcrfResultLocal": 2001,
+				"parentOid": 40750,
+				"oid": 205793453,
+				"gxOpenConditionLocal": true,
+				"pcrfAddress": 69131786,
+				"ueTimeZone": 33280,
+				"counters": [
+					{
+						"name": "10004",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": "2019-09-18T02:19:04.039Z",
+						"lastUsageTime": "2019-09-18T02:30:41.985Z",
+						"cdrOpenTime": "2019-09-18T02:31:47.711Z",
+						"sequence": 6,
+						"isCDR": true
+					},
+					{
+						"name": "1004",
+						"incomingBytes": 4797,
+						"outgoingBytes": 0,
+						"totalBytes": 4797,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [
+							{
+								"limit": 104857600,
+								"state": "total"
+							}
+						],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": null,
+						"lastUsageTime": null,
+						"cdrOpenTime": null,
+						"sequence": 0,
+						"isCDR": false
+					},
+					{
+						"name": "1832",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [
+							{
+								"limit": 1048576,
+								"state": "total"
+							}
+						],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": null,
+						"lastUsageTime": null,
+						"cdrOpenTime": null,
+						"sequence": 0,
+						"isCDR": false
+					},
+					{
+						"name": "6000",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": "2019-09-18T02:19:04.039Z",
+						"lastUsageTime": "2019-09-18T02:30:41.985Z",
+						"cdrOpenTime": "2019-09-18T02:31:47.711Z",
+						"sequence": 6,
+						"isCDR": true
+					}
+				]
+			},
+			"newObject": {
+				"gxRules": [
+					{
+						"ruleName": "DEF_4_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_SOS_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_T2TV_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "DEF_ZVOOQ_GPRS_QOS_UNLIM",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					},
+					{
+						"ruleName": "FREE_RUSSIA_TRAFFIC",
+						"activationTime": null,
+						"deactivationTime": null,
+						"activated": true
+					}
+				],
+				"shapingUL": 64000000,
+				"shapingDL": 256000000,
+				"uli": {
+					"string": "0252f0024548cfff",
+					"glt": 2,
+					"mcc": 250,
+					"mnc": 20,
+					"lac": 17736,
+					"ci": null,
+					"sac": null,
+					"rac": 207,
+					"tac": null,
+					"eci": null,
+					"lacCi": null,
+					"lacSac": null,
+					"lacRac": "17736-207"
+				},
+				"sessionId": "10.131.5.151",
+				"sgsn": "185.77.16.70",
+				"sgsnmccmnc": {
+					"string": "25020",
+					"mcc": 250,
+					"mnc": 20
+				},
+				"rat": 1000,
+				"gxOriginHost": "pcrf01.nsk01.nsk.tele2.epc.mnc020.mcc250.3gppnetwork.org",
+				"gxOriginRealm": "epc.mnc020.mcc250.3gppnetwork.org",
+				"apn": "tms-nsk.tele2.ru",
+				"ccCounter": 15,
+				"ccSessionId": 6735521524974739938,
+				"flags": 536871136,
+				"imeisv": {
+					"string": "8614000362838478",
+					"tac": 86140003,
+					"snr": 628384,
+					"svn": 78
+				},
+				"pcrfResultLocal": 2001,
+				"parentOid": 40750,
+				"oid": 205793453,
+				"gxOpenConditionLocal": true,
+				"pcrfAddress": 69131786,
+				"ueTimeZone": 33280,
+				"counters": [
+					{
+						"name": "10004",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": "2019-09-18T02:19:04.039Z",
+						"lastUsageTime": "2019-09-18T02:30:41.985Z",
+						"cdrOpenTime": "2019-09-18T02:31:47.711Z",
+						"sequence": 6,
+						"isCDR": true
+					},
+					{
+						"name": "1004",
+						"incomingBytes": 4797,
+						"outgoingBytes": 0,
+						"totalBytes": 4797,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [
+							{
+								"limit": 104857600,
+								"state": "total"
+							}
+						],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": null,
+						"lastUsageTime": null,
+						"cdrOpenTime": null,
+						"sequence": 0,
+						"isCDR": false
+					},
+					{
+						"name": "1832",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [
+							{
+								"limit": 1048576,
+								"state": "total"
+							}
+						],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": null,
+						"lastUsageTime": null,
+						"cdrOpenTime": null,
+						"sequence": 0,
+						"isCDR": false
+					},
+					{
+						"name": "6000",
+						"incomingBytes": 0,
+						"outgoingBytes": 0,
+						"totalBytes": 0,
+						"incomingLimits": [],
+						"outgoingLimits": [],
+						"totalLimits": [],
+						"incomingState": null,
+						"outgoingState": null,
+						"totalState": null,
+						"gyFirstUpdateSent": false,
+						"serviceId": 0,
+						"firstUsageTime": "2019-09-18T02:19:04.039Z",
+						"lastUsageTime": "2019-09-18T02:30:41.985Z",
+						"cdrOpenTime": "2019-09-18T02:31:47.711Z",
+						"sequence": 6,
+						"isCDR": true
+					}
+				]
+			},
+			"tags": [
+				"radius"
+			]
+		}
+	}
+]

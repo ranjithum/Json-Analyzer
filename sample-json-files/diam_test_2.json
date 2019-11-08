@@ -1,0 +1,48 @@
+{
+	"id": 197731394,
+	"method": "object.update",
+	"params": [
+		"session",
+		205153057,
+		[
+			[
+				"gxOriginHost",
+				"set",
+				"pcrf01.nsk01.nsk.tele2.epc.mnc020.mcc250.3gppnetwork.org"
+			],
+			[
+				"gxOriginRealm",
+				"set",
+				"epc.mnc020.mcc250.3gppnetwork.org"
+			],
+			[
+				"shapingUL",
+				"set",
+				472000
+			],
+			[
+				"shapingDL",
+				"set",
+				472000
+			],
+			[
+				"ccCounter",
+				"set",
+				7
+			],
+			[
+				"flags",
+				"set",
+				192
+			],
+			[
+				"pcrfResultLocal",
+				"set",
+				2001
+			]
+		]
+	],
+	"tags": [
+		"diameterd"
+	]
+}

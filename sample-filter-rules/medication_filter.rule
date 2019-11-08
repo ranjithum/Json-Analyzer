@@ -1,0 +1,16 @@
+# This rules are used internally by medication.json 
+for each_problem in json.problems {
+	for eachMedication in each_problem.Diabetes {
+		for eachMedicationCls in eachMedication.medications {
+			for eachClass in eachMedicationCls.medicationsClasses {
+				for eachDrugs in eachClass.className {
+					for eachAssociate in eachDrugs.associatedDrug {
+						if eachAssociate.strength == "1000 mg" {
+							pp
+						}
+					}
+				}
+			}
+		}
+	}
+}

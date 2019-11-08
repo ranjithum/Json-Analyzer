@@ -1,0 +1,29 @@
+if json.method == "object.updated" {
+	if json.params.oldObject.ccSessionId == "6735521524974739938" {
+		pp
+	}
+}
+
+if json.method == "object.created" {
+	if json.params.object.subscriberId == "250206000251735" {
+		pp
+	}
+}
+
+if json.method == "object.deleted" {
+	if json.params.object.msisdn == "79082058021" {
+		pp
+	}
+}
+
+if json.method == "object.update" {
+	if json.params[1] == "205153057" {
+		pp
+	}
+}
+
+if json.method == "object.get" {
+	if json.params[1] == "206005384" {
+		pp
+	}
+}

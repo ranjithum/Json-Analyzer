@@ -1,0 +1,232 @@
+%locations
+%{
+int yylex();
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <vector>
+#include "include/json_rule_engine.h" 
+extern int yylineno;
+void yyerror (JsonRuleEngine *rule_engine, char *s);
+%}
+
+%code requires
+{
+#include <stack>
+#include "include/expression_attribute.h" 
+#include "include/generic_expression.h" 
+#include "include/generic_condition.h" 
+#include "include/statement.h" 
+#include "include/json_rule_engine.h" 
+
+static void AddCodeBlock(Statement* stmt, std::vector<Statement*>* stmt_list)
+{
+	for(auto& st : *stmt_list)
+	{
+		stmt->add_statement(st);
+	}
+}
+
+static std::stack<bool> g_trackCodeBlock;
+}
+
+%union 
+{
+	int64_t		int64;
+	char*		string;
+	Identifier* ident;
+	GenericExpression* genExpr;
+	Statement* stmt;
+	std::vector<Statement*>* stmtList;
+};
+
+%parse-param {JsonRuleEngine *rule_engine}
+
+%token IN IF FOR END DOUBLE_EQUAL
+%token JSON
+%token PP
+%token <string> IDENTIFIER
+%token <string> QUOTED_STRING
+%token <int64> INTEGER
+%token <string> DOT
+
+%type <ident> STRING_IDENTIFIER
+%type <genExpr> exp
+%type <stmt> if_block for_block print_packet
+%type <stmtList> code_block statements
+%start statements
+%%
+
+statements :
+		   if_block
+		   {
+			   if (g_trackCodeBlock.size())
+			   {
+				   $$ = new std::vector<Statement*>();
+				   $$->push_back($1);
+			   }
+			   else
+			   {
+				   rule_engine->GetCodeBlock().AddCodeBlock($1);
+			   }
+		   }
+		   | for_block
+		   {
+			   if (g_trackCodeBlock.size())
+			   {
+				   $$ = new std::vector<Statement*>();
+				   $$->push_back($1);
+			   }
+			   else
+			   {
+				   rule_engine->GetCodeBlock().AddCodeBlock($1);
+			   }
+		   }
+		   | statements for_block
+		   {
+				if (!g_trackCodeBlock.size())
+				{
+					rule_engine->GetCodeBlock().AddCodeBlock($2);
+				}
+				else
+				{
+					$1->push_back($2);
+				}
+		   }
+		   | statements if_block
+		   {
+				if (!g_trackCodeBlock.size())
+				{
+					rule_engine->GetCodeBlock().AddCodeBlock($2);
+				}
+				else
+				{
+					$1->push_back($2);
+				}
+		   }
+		   | print_packet
+		   {
+			   $$ = new std::vector<Statement*>();
+			   $$->push_back($1);
+		   }
+		   ;
+
+print_packet :
+			 PP { $$ = new print_packet_statement(); }
+			 ;
+
+if_block : 
+		IF exp DOUBLE_EQUAL QUOTED_STRING START_BRACE code_block
+		{
+			$2->SetBlockType(1);
+			$$ = new IfStatement();
+			Condition* ifCond = new IfCondition($2, std::string($4), $$);
+			$$->set_condition(ifCond);
+			AddCodeBlock($$, $6);
+			free($4);
+			delete $6;
+		}
+		;
+
+for_block :
+		 FOR IDENTIFIER IN exp START_BRACE code_block
+		 {
+			 $4->SetBlockType(2);
+			 $$ = new ForStatement();
+			 Condition* forCond = new ForCondition(std::string($2), $4, $$);
+			 $$->set_condition(forCond);
+			 AddCodeBlock($$, $6);
+			 free($2);
+			 delete $6;
+		 }
+		 ;
+
+exp : JSON
+	{
+		$$ = new JsonExpression();
+		$$->SetExpressionEvaluator(rule_engine->GetJsonParserImplementer()->GetJsonExprEvalImpl());
+	}
+	|
+	JSON '[' INTEGER ']'
+	{
+		$$ = new JsonExpression($3);
+		$$->SetExpressionEvaluator(rule_engine->GetJsonParserImplementer()->GetJsonExprEvalImpl());
+	}
+	|
+	STRING_IDENTIFIER
+	{
+		$$ = new NonJsonExpression();
+		$$->AddIdentifier($1);
+		$$->SetExpressionEvaluator(rule_engine->GetJsonParserImplementer()->GetJsonExprEvalImpl());
+	}
+	|
+	exp STRING_IDENTIFIER
+	{
+		$$ = $1;
+		$$->AddIdentifier($2);
+	}
+	;
+
+STRING_IDENTIFIER :
+				IDENTIFIER
+				{
+					$$ = new Identifier(std::string($1));
+					free($1);
+				}
+				|
+				DOT IDENTIFIER
+				{
+					$$ = new Identifier(std::string($2));
+					free($2);
+				}
+				|
+				STRING_IDENTIFIER '[' INTEGER ']' 
+				{
+					$$ = $1;
+					if (!$$)
+						$$ = new Identifier();
+					$$->AddIndiceToLastExprAttribute($3);
+				}
+				;
+
+START_BRACE: 
+		   '{'
+		   {
+			   g_trackCodeBlock.push(true);
+		   }
+		   ;
+
+code_block: 
+		  END statements END END_BLOCK END
+		  {
+			  $$ = new std::vector<Statement*>();
+			  for (auto& st: *$2)
+			  {
+			  	$$->push_back(st);
+			  }
+			  delete $2;
+		  }
+		  |
+		  END statements END_BLOCK END
+		  {
+			  $$ = new std::vector<Statement*>();
+			  for (auto& st: *$2)
+			  {
+			  	$$->push_back(st);
+			  }
+			  delete $2;
+		  }
+		  ;
+
+END_BLOCK : 
+	'}'
+	{
+		g_trackCodeBlock.pop();
+	}
+	;
+%%
+
+
+void yyerror ([[gnu::unused]]JsonRuleEngine *rule_engine, char* s) {
+	fprintf (stderr, "%s\n", s);
+}

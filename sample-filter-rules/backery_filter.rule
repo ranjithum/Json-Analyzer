@@ -1,0 +1,12 @@
+# This rules is used by backery.json
+for eachRep in json {
+	if eachRep.id == "0003" {
+		for eachTopping in eachRep.topping {
+			if eachTopping.id == "5003" {
+				if eachTopping.type == "Chocolate" {
+					pp
+				}
+			}
+		}
+	}
+}

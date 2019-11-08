@@ -1,0 +1,4 @@
+if json.method == "object.updated" {
+	if json.params.oldObject.ccSessionId == "6735521524974739938" {
+		pp
+	}

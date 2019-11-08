@@ -1,0 +1,9 @@
+if json.method == "object.update" {
+	for eachSet in json.params[2] {
+		if eachSet[0] == "pcrfResultLocal" {
+			if eachSet[2] == "2001" {
+				pp
+			}
+		}
+	}
+}
