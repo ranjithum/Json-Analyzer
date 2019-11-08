@@ -11,7 +11,7 @@ if json[0].method == "object.updated" {
     if json[0].params.object.id == "205793453" {
         pp
     }
-	# Iterate through the list
+    # Iterate through the list
     for rule in json[0].params.object.rules {
         if rule.ruleName == "Match" {
             if rule.active == "true" {
@@ -31,7 +31,10 @@ if json.method == "object.update" {
     
 As you can see above, you can write your own custom rules for filtering the json packet. if a match condition (pp) is encountered then it just returns success.
 Parent node can be either "**json[0].**" or "**json.**."
+
 Please note :- once a match condition is encountered it doesn't execute subsequent statements. 
+
+Please check these [sample filter rules](https://github.com/ranjithum/Json-Analyzer/tree/master/sample-filter-rules) for more complex rules.
 
 ### List of keywords present 
 
