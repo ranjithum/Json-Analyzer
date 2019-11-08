@@ -48,6 +48,7 @@ Please check these [sample filter rules](https://github.com/ranjithum/Json-Analy
 
 > * Supports recurssive if and for loop.
 > * Supports comparison in the form of string.
+> * Support implementation in c++. Please check [c++](https://github.com/ranjithum/Json-Analyzer/tree/master/cpp) for more details.
 
 ## Supported features in upcoming release
 
