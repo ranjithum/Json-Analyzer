@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.6)
 
 project(json_analyzer VERSION 1.0 LANGUAGES CXX)
  
