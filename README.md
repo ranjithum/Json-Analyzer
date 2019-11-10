@@ -1,12 +1,16 @@
-# Json Analyzer
-A simple library used for parsing and filtering json packet.
+# Json Analyzer - Library for filtering json packet.
 
-### For analyzing/filtering a custom JSON stream there are not much tools available. Hence this library provides some simple API for parsing and filtering json packet.
+### For analyzing/filtering a custom JSON stream there are not much tools available. Hence this library provides some simple API for filtering out json packet.
 
-## How does a sample filter rules look like ?
+## How does this work ?
+
+Json object is passed through one or more rule(s), if it matches any of the rules then its a pass condition.
+
+## How does a sample rule(s) look like ?
 ```
 # Anything starting with # are comments
-# Parent node being an Array
+
+# Parent node being an array
 if json[0].method == "object.updated" {
     if json[0].params.object.id == "205793453" {
         pp
@@ -29,15 +33,13 @@ if json.method == "object.update" {
 # Many such rules can be written
 ```
     
-As you can see above, you can write your own custom rules for filtering the json packet. if a match condition (pp) is encountered then it just returns success.
-Parent node can be either "**json[0].**" or "**json.**."
+As you can see above, you can write your own custom rules, if a match condition (pp) is encountered then it just returns success.
 
-Please note :- once a match condition is encountered it doesn't execute subsequent statements. 
+Please note :- __Once a match condition is encountered it doesn't execute subsequent statements.__
 
-Please check these [sample filter rules](https://github.com/ranjithum/Json-Analyzer/tree/master/sample-filter-rules) for more complex rules.
+Check these [sample rules](https://github.com/ranjithum/Json-Analyzer/tree/master/sample-filter-rules) for more complex rules.
 
 ### List of keywords present 
-
 > * **json**   -> Denotes parent node
 > * **if**     -> Comparing conditions
 > * **for**    -> Loops through a list
@@ -45,16 +47,13 @@ Please check these [sample filter rules](https://github.com/ranjithum/Json-Analy
 > * **pp**     -> pass condition
 
 ## Supported features in version-1.0
-
 > * Supports recurssive if and for loop.
 > * Supports comparison in the form of string.
-> * Support implementation in c++. Please check [c++](https://github.com/ranjithum/Json-Analyzer/tree/master/cpp) for more details.
+> * Supports implementation in [c++](https://github.com/ranjithum/Json-Analyzer/tree/master/cpp).
 
 ## Supported features in upcoming release
-
-> * Support for basic data types (int64, float, bool).
-> * Support for more binary operators (!=, >=, <=).
-> * Support for declaring variables.
+> * Support for basic data types (int64, uint64, float, bool).
+> * Support for more comparison operators (!=, >=, <=, >, <).
 > * **GOLANG** support.
 > * **PYTHON** support.
 
