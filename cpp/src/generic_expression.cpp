@@ -55,12 +55,14 @@ int JsonExpression::GetIndex() const
 
 bool JsonExpression::EvaluateExpression(std::string& expr_value)
 {
-    if ( m_blockType == 1 )
+    if ( m_blockType == BlockType::IF )
     {
+		// For the Json **if** expression, this would get the value
         return m_expressionEvaluator->ValidateAndGetExprValue(this, expr_value);
     }
     else
     {
+		// For the Json **for** expression, this would get us the iterator
         m_valueArr = std::make_unique<ValueWrapper>(
                          m_expressionEvaluator->GetJsonArray()
                      );
@@ -73,7 +75,8 @@ ValueWrapper* NonJsonExpression::GetValueIterator(std::string& str)
 {
     std::string& first_nonjson_attr = m_listOfIdentifier.front()->GetListOfExprAttribute().front()->GetAttributeExprName();
 
-    if (str.compare(first_nonjson_attr) == 0)
+	//! If the string matches then return this value iterator, else parent Value Iterator
+	if (str.compare(first_nonjson_attr) == 0)
     {
         return m_valueArr.get();
     }
@@ -85,12 +88,22 @@ ValueWrapper* NonJsonExpression::GetValueIterator(std::string& str)
 
 bool NonJsonExpression::EvaluateExpression(std::string& expr_value)
 {
-    if ( m_blockType == 1 )
+    if ( m_blockType == BlockType::IF )
     {
+		//! This would be internally used by **if** statement used within **for**
+		//! For eg :-
+		//  for eachRep in json {
+		//        if eachRep.id == "0003" {
+		//        	pp
+		//        }
+		//  }
+		//! "eachRep.id" is a non-json expression
+
         return m_expressionEvaluator->ValidateAndGetExprValue(this, GetValueIterator(expr_value), expr_value);
     }
     else
     {
+		//! This would be internally used by **for** statement used within **for**
         m_valueArr = std::make_unique<ValueWrapper>(
                          m_expressionEvaluator->GetJsonArray()
                      );
