@@ -7,122 +7,130 @@
 #include "json_array_value_bridge.h"
 
 class Condition;
+
+//! Enum representing type of expression
+enum class BlockType : std::int8_t
+{
+    IF = 1,
+    FOR = 2
+};
+
+//! This class represents an expression
 class GenericExpression {
 protected:
 
-    enum class Block : std::int8_t {IF = 1, FOR = 2};
-
+    // ! List of identifiers
     std::vector<std::unique_ptr<Identifier>> m_listOfIdentifier;
+
+    //! Expression Evaluator for evaluating JSON expression
     ExpressionEvaluationInterface* m_expressionEvaluator = 0;
-    std::int8_t m_blockType;
+
+    //! Type expression
+    BlockType m_blockType;
+
+    //! Parent Condition
     Condition* m_parentCondition = 0;
+
+    //! Pointer to ValueWrapper
+    std::unique_ptr<ValueWrapper> m_valueArr;
+
+    //! Method for getting Value Wrapper if identifier matches
+    virtual ValueWrapper* GetValueIterator(std::string& str) = 0;
 public:
 
-    virtual void AddIdentifier(Identifier* e_attr);
+    //! Method for adding Identifier
+    //! @param e_attr
+    //!		pointer to identifier
+    void AddIdentifier(Identifier* e_attr);
 
-    virtual void SetParent(Condition* parent)
+    //! Method to set parent Condition
+    void SetParent(Condition* parent)
     {
         m_parentCondition = parent;
     }
 
+    //! Method to set block type
     void SetBlockType(std::int8_t t)
     {
-        m_blockType = t;
+        m_blockType = (BlockType)t;
     }
 
+    //! Method to get expression in string format
     virtual std::string ToString();
 
+    //! Method to get the list of identifiers
     const std::vector<std::unique_ptr<Identifier>>& GetIdentifier() const;
 
+    //! Method for setting expression Evaluator
+    void SetExpressionEvaluator(ExpressionEvaluationInterface* eval)
+    {
+        m_expressionEvaluator = eval;
+    }
+
+    //! Method of incrementing Value Iterator
+    bool IncrementValueIterator()
+    {
+        return m_valueArr->Increment();
+    }
+
+    //! Method to cleanup after evaluating each expression
+    virtual void CleanUp()
+    {
+        m_valueArr.reset();
+    }
+
+    //! Method fot getting Value Wrapper
+    ValueWrapper* GetValueIterator()
+    {
+        return m_valueArr.get();
+    }
+
+    //! Method for Evaluating the expression
     virtual bool EvaluateExpression(std::string& expr_val) = 0;
-
-    virtual void SetExpressionEvaluator(ExpressionEvaluationInterface*) = 0;
-
-    virtual ValueWrapper* GetValueIterator(std::string& str) = 0;
-    virtual ValueWrapper* GetValueIterator() = 0;
-
-    virtual bool IncrementValueIterator() = 0;
 
     virtual ~GenericExpression()
     {
         m_listOfIdentifier.clear();
     }
 
-    virtual void CleanUp() = 0;
 };
 
+//! Class representing Json expression
 class JsonExpression : public GenericExpression {
 private:
+    //! Json index
     int m_jsonIndex = -1;
 
-    std::unique_ptr<ValueWrapper> m_valueArr;
-public:
-    JsonExpression () = default;
-
-    JsonExpression(unsigned int j_index);
-
-    std::string ToString() override;
-
-    int GetIndex() const;
-
-    bool EvaluateExpression(std::string& expr_val) override;
-
-    void SetExpressionEvaluator(ExpressionEvaluationInterface* eval) override
-    {
-        m_expressionEvaluator = eval;
-    }
-
+protected:
+    //! @copydoc GenericExpression::GetValueIterator
     ValueWrapper* GetValueIterator([[gnu::unused]] std::string& dummy) override
     {
-        return m_valueArr.get();
+        return GenericExpression::GetValueIterator();
     }
+public:
+    //! Default Ctor
+    JsonExpression () = default;
 
-    virtual ValueWrapper* GetValueIterator()
-    {
-        return m_valueArr.get();
-    }
+    //! Ctor with index
+    JsonExpression(unsigned int j_index);
 
-    virtual bool IncrementValueIterator()
-    {
-        return m_valueArr->Increment();
-    }
+    //! copydoc GenericExpression::ToString
+    std::string ToString() override;
 
-    void CleanUp() override
-    {
-        m_valueArr.reset();
-    }
+    //! Method to get json index value
+    int GetIndex() const;
+
+    //! @copydoc GenericExpression::EvaluateExpression
+    bool EvaluateExpression(std::string& expr_val) override;
 };
 
+//! Class representing non-json expression
 class NonJsonExpression : public GenericExpression {
-private:
-    std::unique_ptr<ValueWrapper> m_valueArr;
+protected:
+    //! @copydoc GenericExpression::GetValueIterator
+    ValueWrapper* GetValueIterator(std::string& str) override;
 public:
+    //! @copydoc GenericExpression::EvaluateExpression
     bool EvaluateExpression(std::string& expr_val) override;
 
-    void SetParent(Condition* parent) override
-    {
-        m_parentCondition = parent;
-    }
-
-    void SetExpressionEvaluator(ExpressionEvaluationInterface* eval) override
-    {
-        m_expressionEvaluator = eval;
-    }
-
-
-    ValueWrapper* GetValueIterator(std::string& str) override;
-    ValueWrapper* GetValueIterator() override
-    {
-        return m_valueArr.get();
-    }
-
-    virtual bool IncrementValueIterator()
-    {
-        return m_valueArr->Increment();
-    }
-
-    void CleanUp() override
-    {
-        m_valueArr.reset();
-    }
 };

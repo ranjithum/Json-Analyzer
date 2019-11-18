@@ -9,6 +9,8 @@ IfCondition::IfCondition(GenericExpression* expr, std::string quoted_string, Sta
     m_lhsExpr(std::unique_ptr<GenericExpression>(expr)),
     m_quotedValue(quoted_string)
 {
+    // Not a good idea :(. TODO :- Remove this, or do this only for
+    // string comparison
     auto IsQuote = [] (char c) -> bool
     {
         if (c == '"')
