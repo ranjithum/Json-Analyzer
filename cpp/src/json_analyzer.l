@@ -32,6 +32,14 @@ void yyerror(JsonRuleEngine *, char *);
 
 "=="	return DOUBLE_EQUAL;
 
+">="	return GREATER_THAN_EQUAL;
+
+">"		return GREATER_THAN;
+
+"<="	return LESS_THAN_EQUAL;
+
+"<"		return LESS_THAN;
+
 "pp"	return PP;
 
 \"(.*?)\" {

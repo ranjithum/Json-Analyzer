@@ -18,6 +18,7 @@ void yyerror (JsonRuleEngine *rule_engine, char *s);
 #include "include/generic_condition.h" 
 #include "include/statement.h" 
 #include "include/json_rule_engine.h" 
+#include "include/generic_comparator.h" 
 
 static void AddCodeBlock(Statement* stmt, std::vector<Statement*>* stmt_list)
 {
@@ -38,11 +39,13 @@ static std::stack<bool> g_trackCodeBlock;
 	GenericExpression* genExpr;
 	Statement* stmt;
 	std::vector<Statement*>* stmtList;
+	CompareOperators comparator;
 };
 
 %parse-param {JsonRuleEngine *rule_engine}
 
-%token IN IF FOR END DOUBLE_EQUAL
+%token IN IF FOR END
+%token DOUBLE_EQUAL GREATER_THAN_EQUAL GREATER_THAN LESS_THAN_EQUAL LESS_THAN 
 %token JSON
 %token PP
 %token <string> IDENTIFIER
@@ -54,6 +57,7 @@ static std::stack<bool> g_trackCodeBlock;
 %type <genExpr> exp
 %type <stmt> if_block for_block print_packet
 %type <stmtList> code_block statements
+%type <comparator> COMPARATOR
 %start statements
 %%
 
@@ -116,7 +120,7 @@ print_packet :
 			 ;
 
 if_block : 
-		IF exp DOUBLE_EQUAL QUOTED_STRING START_BRACE code_block
+		IF exp COMPARATOR QUOTED_STRING START_BRACE code_block
 		{
 			$2->SetBlockType(1);
 			$$ = new IfStatement();
@@ -127,6 +131,33 @@ if_block :
 			delete $6;
 		}
 		;
+
+COMPARATOR :
+	DOUBLE_EQUAL
+	{
+		$$ = CompareOperators::DoubleEqualsOperator;
+	}
+	|
+	GREATER_THAN_EQUAL
+	{
+		$$ = CompareOperators::GreaterThanEqualsOperator;
+	}
+	|
+	GREATER_THAN
+	{
+		$$ = CompareOperators::GreaterThanOperator;
+	}
+	|
+	LESS_THAN_EQUAL
+	{
+		$$ = CompareOperators::LessThanEqualsOperator;
+	}
+	|
+	LESS_THAN
+	{
+		$$ = CompareOperators::LessThanOperator;
+	}
+	;
 
 for_block :
 		 FOR IDENTIFIER IN exp START_BRACE code_block
