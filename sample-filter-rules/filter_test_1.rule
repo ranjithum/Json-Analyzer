@@ -1,5 +1,5 @@
 if json[0].method == "object.updated" {
-	if json[0].params.oldObject.oid == "205793453" {
+	if json[0].params.oldObject.oid == 205793453 {
 		pp
 	}
 }

@@ -18,7 +18,8 @@ TEST_CASE("IfConditionTest - ToString") {
     json_exp_with_index->AddIdentifier(ident2);
     json_exp_with_index->AddIdentifier(ident3);
 
-    IfCondition if_conf(json_exp_with_index, "205793453", 0);
+	CompareValueBase *cV = new CompareValue<std::string>("205793453", BASIC_DTYPE::STRING);
+    IfCondition if_conf(json_exp_with_index, cV, 0);
     CHECK(if_conf.ToString().c_str() == "if json[0].param.oldObject.oid.. == 205793453");
 }
 

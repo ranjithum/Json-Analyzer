@@ -10,5 +10,5 @@ public:
 
     virtual JsonArrayRep& Clone() = 0;
 
-	virtual ~JsonArrayRep() = default;
+    virtual ~JsonArrayRep() = default;
 };

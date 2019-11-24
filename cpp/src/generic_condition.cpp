@@ -1,43 +1,53 @@
-
-#include <algorithm>
+#include <iostream>
 #include <sstream>
 #include "include/statement.h"
 #include "include/generic_condition.h"
 
-IfCondition::IfCondition(GenericExpression* expr, std::string quoted_string, Statement* parent):
+IfCondition::IfCondition(GenericExpression* expr, CompareValueBase* c_val, Statement* parent):
     Condition(parent),
     m_lhsExpr(std::unique_ptr<GenericExpression>(expr)),
-    m_quotedValue(quoted_string)
+    m_compareValue(std::unique_ptr<CompareValueBase>(c_val))
 {
-    // Not a good idea :(. TODO :- Remove this, or do this only for
-    // string comparison
-    auto IsQuote = [] (char c) -> bool
-    {
-        if (c == '"')
-            return true;
-        return false;
-    };
-
-    m_quotedValue.erase(std::remove_if(m_quotedValue.begin(), m_quotedValue.end(), IsQuote), m_quotedValue.end());
     m_lhsExpr->SetParent(this);
 }
 
 bool IfCondition::EvaluateCondition()
 {
-    std::string lhs_value;
+    ExpressionValue lhs_value;
     m_lhsExpr->EvaluateExpression(lhs_value);
 
-    if (m_quotedValue.compare(lhs_value) == 0)
-        return true;
+    if (lhs_value.m_expressionType != m_compareValue->GetDataType())
+    {
+        std::cout << "LHS and RHS are not same data type for condition : " << this->ToString() << "\n";
+        std::cout << "LHS = " << c_dataType_To_string.find(lhs_value.m_expressionType)->second << "\n";
+        std::cout << "RHS = " << c_dataType_To_string.find(m_compareValue->GetDataType())->second << "\n";
+        return false;
+    }
 
+    switch(lhs_value.m_expressionType)
+    {
+    case BASIC_DTYPE::BOOL:
+        return m_compareValue->CompareIt(lhs_value.boolValue);
+        break;
+    case BASIC_DTYPE::SINT64:
+        return m_compareValue->CompareIt(lhs_value.sint64Value);
+        break;
+    case BASIC_DTYPE::DOUBLE:
+        return m_compareValue->CompareIt(lhs_value.doubleValue);
+        break;
+    case BASIC_DTYPE::STRING:
+        return m_compareValue->CompareIt(lhs_value.stringValue);
+        break;
+    }
     return false;
 }
 
 std::string IfCondition::ToString()
 {
     std::stringstream ss;
+
     ss << "if " << m_lhsExpr->ToString() <<
-       " == " << m_quotedValue;
+       " == " << m_compareValue->GetValue();
     return ss.str();
 }
 
@@ -61,7 +71,7 @@ ForCondition::ForCondition(std::string var, GenericExpression* expr, Statement* 
 
 bool ForCondition::EvaluateCondition()
 {
-    std::string dummy_val;
+    ExpressionValue dummy_val;
     return m_rhsExpr->EvaluateExpression(dummy_val);
 }
 

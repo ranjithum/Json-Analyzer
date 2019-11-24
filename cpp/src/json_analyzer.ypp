@@ -19,6 +19,7 @@ void yyerror (JsonRuleEngine *rule_engine, char *s);
 #include "include/statement.h" 
 #include "include/json_rule_engine.h" 
 #include "include/generic_comparator.h" 
+#include "include/compare_value.h"
 
 static void AddCodeBlock(Statement* stmt, std::vector<Statement*>* stmt_list)
 {
@@ -33,13 +34,16 @@ static std::stack<bool> g_trackCodeBlock;
 
 %union 
 {
-	int64_t		int64;
+	int64_t		sint64;
+	double		doubleValue;
+	bool		boolValue;
 	char*		string;
 	Identifier* ident;
 	GenericExpression* genExpr;
 	Statement* stmt;
 	std::vector<Statement*>* stmtList;
 	CompareOperators comparator;
+	CompareValueBase* valueComparator;
 };
 
 %parse-param {JsonRuleEngine *rule_engine}
@@ -50,7 +54,9 @@ static std::stack<bool> g_trackCodeBlock;
 %token PP
 %token <string> IDENTIFIER
 %token <string> QUOTED_STRING
-%token <int64> INTEGER
+%token <doubleValue> DOUBLE_VALUE
+%token <boolValue> BOOL_VALUE
+%token <sint64> SIGNED_VALUE
 %token <string> DOT
 
 %type <ident> STRING_IDENTIFIER
@@ -58,6 +64,7 @@ static std::stack<bool> g_trackCodeBlock;
 %type <stmt> if_block for_block print_packet
 %type <stmtList> code_block statements
 %type <comparator> COMPARATOR
+%type <valueComparator> COMPARING_VALUE
 %start statements
 %%
 
@@ -120,14 +127,14 @@ print_packet :
 			 ;
 
 if_block : 
-		IF exp COMPARATOR QUOTED_STRING START_BRACE code_block
+		IF exp COMPARATOR COMPARING_VALUE START_BRACE code_block
 		{
 			$2->SetBlockType(1);
 			$$ = new IfStatement();
-			Condition* ifCond = new IfCondition($2, std::string($4), $$);
+			$4->SetComparator($3);
+			Condition* ifCond = new IfCondition($2, $4, $$);
 			$$->set_condition(ifCond);
 			AddCodeBlock($$, $6);
-			free($4);
 			delete $6;
 		}
 		;
@@ -159,6 +166,28 @@ COMPARATOR :
 	}
 	;
 
+COMPARING_VALUE :
+	QUOTED_STRING
+	{
+		$$ = new CompareValue<std::string>($1, BASIC_DTYPE::STRING);
+	}
+	|
+	SIGNED_VALUE
+	{
+		$$ = new CompareValue<int64_t>($1, BASIC_DTYPE::SINT64);
+	}
+	|
+	BOOL_VALUE
+	{
+		$$ = new CompareValue<bool>($1, BASIC_DTYPE::BOOL);
+	}
+	|
+	DOUBLE_VALUE
+	{
+		$$ = new CompareValue<double>($1, BASIC_DTYPE::DOUBLE);
+	}
+	;
+
 for_block :
 		 FOR IDENTIFIER IN exp START_BRACE code_block
 		 {
@@ -178,7 +207,7 @@ exp : JSON
 		$$->SetExpressionEvaluator(rule_engine->GetJsonParserImplementer()->GetJsonExprEvalImpl());
 	}
 	|
-	JSON '[' INTEGER ']'
+	JSON '[' SIGNED_VALUE ']'
 	{
 		$$ = new JsonExpression($3);
 		$$->SetExpressionEvaluator(rule_engine->GetJsonParserImplementer()->GetJsonExprEvalImpl());
@@ -211,7 +240,7 @@ STRING_IDENTIFIER :
 					free($2);
 				}
 				|
-				STRING_IDENTIFIER '[' INTEGER ']' 
+				STRING_IDENTIFIER '[' SIGNED_VALUE ']'
 				{
 					$$ = $1;
 					if (!$$)

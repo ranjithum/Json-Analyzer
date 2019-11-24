@@ -14,11 +14,11 @@ private:
 
     void InitRules();
 
-	JsonRuleEngine() = delete;
+    JsonRuleEngine() = delete;
 
-	JsonRuleEngine(const JsonRuleEngine& ) = delete;
+    JsonRuleEngine(const JsonRuleEngine& ) = delete;
 
-	JsonRuleEngine& operator=(const JsonRuleEngine&) = delete;
+    JsonRuleEngine& operator=(const JsonRuleEngine&) = delete;
 public:
     JsonRuleEngine(const char* filter_file);
 

@@ -2,54 +2,60 @@
 
 enum class CompareOperators
 {
-	DoubleEqualsOperator,
-	GreaterThanEqualsOperator,
-	GreaterThanOperator,
-	LessThanEqualsOperator,
-	LessThanOperator
+    DoubleEqualsOperator,
+    GreaterThanEqualsOperator,
+    GreaterThanOperator,
+    LessThanEqualsOperator,
+    LessThanOperator
 };
 
-class CompareDoubleEqualsOperator
-{
+template<typename T>
+class ComparatorInterface {
 public:
-	bool DoCompare(auto& lhs, auto& rhs)
-	{
-		return lhs == rhs;
-	}
+    virtual bool DoCompare(const T&, const T&) = 0;
 };
 
-class CompareGreaterThanEqualsOperator 
-{
+template<typename T>
+class CompareDoubleEqualsOperator : public ComparatorInterface<T> {
 public:
-	bool DoCompare(auto& lhs, auto& rhs)
-	{
-		return lhs >= rhs;
-	}
+    bool DoCompare(const T& lhs, const T& rhs) override
+    {
+        return lhs == rhs;
+    }
 };
 
-class CompareGreaterThanOperator 
-{
+template<typename T>
+class CompareGreaterThanEqualsOperator : public ComparatorInterface<T> {
 public:
-	bool DoCompare(auto& lhs, auto& rhs)
-	{
-		return lhs > rhs;
-	}
+    bool DoCompare(const T& lhs, const T& rhs) override
+    {
+        return lhs >= rhs;
+    }
 };
 
-class CompareLessThanEqualsOperator 
-{
+template<typename T>
+class CompareGreaterThanOperator : public ComparatorInterface<T> {
 public:
-	bool DoCompare(auto& lhs, auto& rhs)
-	{
-		return lhs <= rhs;
-	}
+    bool DoCompare(const T& lhs, const T& rhs) override
+    {
+        return lhs > rhs;
+    }
 };
 
-class CompareLessThanOperator 
-{
+template<typename T>
+class CompareLessThanEqualsOperator : public ComparatorInterface<T> {
 public:
-	bool DoCompare(auto& lhs, auto& rhs)
-	{
-		return lhs < rhs;
-	}
+    bool DoCompare(const T& lhs, const T& rhs) override
+    {
+        return lhs <= rhs;
+    }
+};
+
+template<typename T>
+class CompareLessThanOperator : public ComparatorInterface<T> {
+public:
+    bool DoCompare(const T& lhs, const T& rhs) override
+    {
+        return lhs < rhs;
+    }
 };

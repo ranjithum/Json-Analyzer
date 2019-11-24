@@ -2,6 +2,7 @@
 
 #include <string>
 #include "generic_expression.h"
+#include "compare_value.h"
 
 class Statement;
 
@@ -59,9 +60,7 @@ private:
     //! Represents the expression
     std::unique_ptr<GenericExpression> m_lhsExpr;
 
-    //! Reprents the value to be compared
-    std::string m_quotedValue;
-
+    std::unique_ptr<CompareValueBase> m_compareValue;
 public:
     //! Ctor
     //! @param expr
@@ -70,7 +69,7 @@ public:
     //!		comparing value
     //! @param parent
     //		pointer to parent statement
-    IfCondition(GenericExpression* expr, std::string quoted_string, Statement* parent);
+    IfCondition(GenericExpression* expr, CompareValueBase* c_val, Statement* parent);
 
     //! @copydoc Condition::EvaluateCondition
     bool EvaluateCondition() override;
@@ -91,14 +90,6 @@ public:
 
     //! @copydoc Condition::CleanUp
     void CleanUp() override;
-
-    //! Dtor
-    ~IfCondition()
-    {
-        // Not needed, but just being safer :)
-        m_quotedValue.clear();
-    }
-
 };
 
 //! Class representing a FOR condition
