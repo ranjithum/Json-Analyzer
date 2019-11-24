@@ -1,6 +1,7 @@
 #pragma once
 
 #include "json_array_value_bridge.h"
+#include "expression_value.h"
 
 class GenericExpression;
 
@@ -13,7 +14,7 @@ public:
     //! @param value
     //!		If expression gets validated, store the value
     //! @return true if expression is valid
-    virtual bool ValidateAndGetExprValue(const GenericExpression* expr, std::string& value) = 0;
+    virtual bool ValidateAndGetExprValue(const GenericExpression* expr, ExpressionValue& value) = 0;
 
     //! Method for validating the expression, if validated get the array object
     //! @param expr
@@ -31,7 +32,7 @@ public:
     //! @param value
     //! 	If expression gets validated, save the value
     //! @return true if expression is valid
-    virtual bool ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrap, std::string& value) = 0;
+    virtual bool ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrap, ExpressionValue& value) = 0;
 
     //! Method for validating the expression, if validated get the array object from parent array object
     //! @param expr

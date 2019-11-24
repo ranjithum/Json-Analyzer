@@ -66,7 +66,7 @@ Value* RapidJsonImpl::ValidateAndGetRapidJsonValue(const GenericExpression* expr
     return &(*refExpr);
 }
 
-bool RapidJsonImpl::ValidateAndGetExprValue(const GenericExpression* expr, std::string& value)
+bool RapidJsonImpl::ValidateAndGetExprValue(const GenericExpression* expr, ExpressionValue& value)
 {
     Value* vPtr = ValidateAndGetRapidJsonValue(expr);
     if (vPtr)
@@ -95,7 +95,7 @@ bool RapidJsonImpl::ValidateAndGetValueIterator(const GenericExpression* expr, V
     return true;
 }
 
-bool RapidJsonImpl::ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrapper, std::string& value)
+bool RapidJsonImpl::ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrapper, ExpressionValue& value)
 {
     Value* refExpr = (RapidJsonArrayRep*)(valueWrapper->GetValueArr());
     //jPrint(*refExpr);
@@ -214,7 +214,7 @@ bool RapidJsonImpl::ValidateAndGetValueIterator(const GenericExpression* non_jso
     return true;
 }
 
-void RapidJsonImpl::GetFinalValue(const Value& rapid_json_ref, std::string& final_string)
+void RapidJsonImpl::GetFinalValue(const Value& rapid_json_ref, ExpressionValue& final_value)
 {
     if (rapid_json_ref.IsObject())
     {
@@ -229,19 +229,40 @@ void RapidJsonImpl::GetFinalValue(const Value& rapid_json_ref, std::string& fina
     }
 
     if(rapid_json_ref.IsInt())
-        final_string = std::to_string(rapid_json_ref.GetInt());
+    {
+        final_value.m_expressionType = BASIC_DTYPE::SINT64;
+        final_value.sint64Value = rapid_json_ref.GetInt();
+    }
     else if(rapid_json_ref.IsUint())
-        final_string = std::to_string(rapid_json_ref.GetUint());
+    {
+        final_value.m_expressionType = BASIC_DTYPE::SINT64;
+        final_value.sint64Value = rapid_json_ref.GetUint();
+    }
     else if(rapid_json_ref.IsUint64())
-        final_string = std::to_string(rapid_json_ref.GetUint64());
+    {
+        final_value.m_expressionType = BASIC_DTYPE::SINT64;
+        final_value.sint64Value = rapid_json_ref.GetUint64();
+    }
     else if(rapid_json_ref.IsInt64())
-        final_string = std::to_string(rapid_json_ref.GetInt64());
+    {
+        final_value.m_expressionType = BASIC_DTYPE::SINT64;
+        final_value.sint64Value = rapid_json_ref.GetInt64();
+    }
     else if (rapid_json_ref.IsDouble())
-        final_string = std::to_string(rapid_json_ref.GetDouble());
+    {
+        final_value.m_expressionType = BASIC_DTYPE::DOUBLE;
+        final_value.doubleValue = rapid_json_ref.GetDouble();
+    }
     else if (rapid_json_ref.IsBool())
-        final_string = std::string(rapid_json_ref.GetBool() == 1 ? "true" : "false");
+    {
+        final_value.m_expressionType = BASIC_DTYPE::BOOL;
+        final_value.boolValue = rapid_json_ref.GetBool();
+    }
     else if (rapid_json_ref.IsString())
-        final_string = rapid_json_ref.GetString();
+    {
+        final_value.m_expressionType = BASIC_DTYPE::STRING;
+        final_value.stringValue = rapid_json_ref.GetString();
+    }
 }
 
 ErrorCode RapidJsonImpl::ParseJsonStream(FILE* json_file)

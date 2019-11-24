@@ -13,7 +13,8 @@ TEST_CASE("StatementTest - add_statement")
 	parent_ident->AddExprAttribute(std::string("method"));
 	GenericExpression* parent_json_exp = new JsonExpression(0);
 	parent_json_exp->AddIdentifier(parent_ident);
-	Condition *parent_cond = new IfCondition(parent_json_exp, "object.updated", 0);
+	CompareValueBase *pV = new CompareValue<std::string>("object.updated", BASIC_DTYPE::STRING);
+	Condition *parent_cond = new IfCondition(parent_json_exp, pV, 0);
 	parent_stmt.set_condition(parent_cond);
 
 	Statement* child_stmt1 = new IfStatement(); 
@@ -24,7 +25,8 @@ TEST_CASE("StatementTest - add_statement")
 	child_ident1->AddExprAttribute(std::string("oid"));
 	GenericExpression *child_json_exp1 = new JsonExpression(0);
 	child_json_exp1->AddIdentifier(child_ident1);
-	Condition* child_cond1 = new IfCondition(child_json_exp1, "205793453", 0);
+	CompareValueBase *cV1 = new CompareValue<std::string>("205793453", BASIC_DTYPE::STRING);
+	Condition* child_cond1 = new IfCondition(child_json_exp1, cV1, 0);
 	child_stmt1->set_condition(child_cond1);
 	Statement* child_stmt1_1 = new print_packet_statement();
 	child_stmt1->add_statement(child_stmt1_1);
@@ -47,7 +49,8 @@ TEST_CASE("StatementTest - add_statement")
 	child_ident2_1->AddExprAttribute(std::string("ruleName"));
 	GenericExpression *child_nonjson_exp2_1 = new NonJsonExpression();
 	child_nonjson_exp2_1->AddIdentifier(child_ident2_1);
-	Condition* child_cond2_1 = new IfCondition(child_nonjson_exp2_1, "DEF_SOS_GPRS_QOS_UNLIM", 0);
+	CompareValueBase *cV2_1 = new CompareValue<std::string>("DEF_SOS_GPRS_QOS_UNLIM", BASIC_DTYPE::STRING);
+	Condition* child_cond2_1 = new IfCondition(child_nonjson_exp2_1, cV2_1, 0);
 	child_stmt2_1->set_condition(child_cond2_1);
 	Statement* child_stmt2_1_1 = new print_packet_statement();
 	child_stmt2_1->add_statement(child_stmt2_1_1);

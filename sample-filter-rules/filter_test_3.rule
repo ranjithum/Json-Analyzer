@@ -1,7 +1,7 @@
 if json[0].method == "object.updated" {
 	for gxRule in json[0].params.oldObject.gxRules {
 		if gxRule.ruleName == "FREE_RUSSIA_TRAFFIC" {
-			if gxRule.activated == "true" {
+			if gxRule.activated == true {
 				pp
 			}
 		}

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "expression_value.h"
 #include "expression_attribute.h"
 #include "expression_evaluation_interface.h"
 #include "json_array_value_bridge.h"
@@ -86,7 +87,7 @@ public:
     }
 
     //! Method for Evaluating the expression
-    virtual bool EvaluateExpression(std::string& expr_val) = 0;
+    virtual bool EvaluateExpression(ExpressionValue& expr_val) = 0;
 
     virtual ~GenericExpression()
     {
@@ -121,7 +122,7 @@ public:
     int GetIndex() const;
 
     //! @copydoc GenericExpression::EvaluateExpression
-    bool EvaluateExpression(std::string& expr_val) override;
+    bool EvaluateExpression(ExpressionValue& expr_val) override;
 };
 
 //! Class representing non-json expression
@@ -131,6 +132,6 @@ protected:
     ValueWrapper* GetValueIterator(std::string& str) override;
 public:
     //! @copydoc GenericExpression::EvaluateExpression
-    bool EvaluateExpression(std::string& expr_val) override;
+    bool EvaluateExpression(ExpressionValue& expr_val) override;
 
 };

@@ -21,8 +21,8 @@ public:
         return m_currentIndex;
     }
 
-	~ValueWrapper()
-	{
-		delete &m_arrayValue;
-	}
+    ~ValueWrapper()
+    {
+        delete &m_arrayValue;
+    }
 };

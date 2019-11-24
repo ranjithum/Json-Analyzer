@@ -14,7 +14,7 @@ private:
 
     RapidJsonArrayRep m_rapidJsonArray;
 
-    void GetFinalValue(const Value& rapid_json_ref, std::string& final_string);
+    void GetFinalValue(const Value& rapid_json_ref, ExpressionValue& final_string);
 
     Value* GetNextValue(Value* ref, auto index)
     {
@@ -22,11 +22,11 @@ private:
     }
     Value* ValidateAndGetRapidJsonValue(const GenericExpression* expr);
 public:
-    bool ValidateAndGetExprValue(const GenericExpression* expr, std::string& value) override;
+    bool ValidateAndGetExprValue(const GenericExpression* expr, ExpressionValue& value) override;
 
     bool ValidateAndGetValueIterator(const GenericExpression* expr, ValueWrapper* value) override;
 
-    bool ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrapper, std::string& value) override;
+    bool ValidateAndGetExprValue(const GenericExpression* expr, ValueWrapper* valueWrapper, ExpressionValue& value) override;
 
     bool ValidateAndGetValueIterator(const GenericExpression* expr, ValueWrapper* p_valWrapper, ValueWrapper* value) override;
 
