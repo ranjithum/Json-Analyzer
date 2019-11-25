@@ -91,6 +91,24 @@ TEST_CASE("JsonRuleEngineTest - ParseIfForIfForCondition")
 	fclose(fp);
 }
 
+TEST_CASE("JsonRuleEngineTest - greaterThan")
+{
+	JsonRuleEngine jR(std::string(filter_rule_path + "filter_test_greaterThan.rule").c_str());
+	FILE* fp = fopen(std::string(json_file_path + "diam_test_1.json").c_str(), "r");
+	
+	CHECK(jR.ParseJsonStream(fp) == ErrorCode::OK);
+	fclose(fp);
+}
+
+TEST_CASE("JsonRuleEngineTest - lessThan")
+{
+	JsonRuleEngine jR(std::string(filter_rule_path + "filter_test_lessThan.rule").c_str());
+	FILE* fp = fopen(std::string(json_file_path + "diam_test_1.json").c_str(), "r");
+
+	CHECK(jR.ParseJsonStream(fp) == ErrorCode::OK);
+	fclose(fp);
+}
+
 TEST_CASE("JsonRuleEngineTest - FilterRuleException")
 {
 	std::string wrong_file(std::string(filter_rule_path + "wrong_filter.rule").c_str());
