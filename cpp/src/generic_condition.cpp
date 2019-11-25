@@ -30,7 +30,7 @@ bool IfCondition::EvaluateCondition()
         return m_compareValue->CompareIt(lhs_value.boolValue);
         break;
     case BASIC_DTYPE::SINT64:
-        return m_compareValue->CompareIt(lhs_value.sint64Value);
+        return m_compareValue->CompareIt(int64_t(lhs_value.sint64Value));
         break;
     case BASIC_DTYPE::DOUBLE:
         return m_compareValue->CompareIt(lhs_value.doubleValue);
