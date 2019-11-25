@@ -170,6 +170,7 @@ COMPARING_VALUE :
 	QUOTED_STRING
 	{
 		$$ = new CompareValue<std::string>($1, BASIC_DTYPE::STRING);
+		free($1);
 	}
 	|
 	SIGNED_VALUE
