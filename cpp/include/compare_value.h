@@ -23,6 +23,8 @@ public:
     {
         return m_basicDataType;
     }
+
+    virtual ~CompareValueBase() = default;
 };
 
 template<typename DTYPE>

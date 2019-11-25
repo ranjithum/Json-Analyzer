@@ -26,5 +26,11 @@ test : $(LIB)
 
 %_test.valgrind : %_test.cpp $(LIB)
 	$(CXX) $(INCLUDE_PATH) -o $(@) $< -Wl,-rpath,$(JSON_ANALYZER_LIB_PATH) -L$(JSON_ANALYZER_LIB_PATH) -ljson_analyzer
-	G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --log-file=./$@.log --leak-check=full ./$(@)
+	G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --log-file=./$@.log --leak-check=full --show-leak-kinds=all ./$(@)
 	@rm -f $(@)
+
+valgrind : $(LIB) 
+	for test_file in $(TEST_FILES); do \
+		$(CXX) $(INCLUDE_PATH) -o runner $$test_file -Wl,-rpath,$(JSON_ANALYZER_LIB_PATH) -L$(JSON_ANALYZER_LIB_PATH) -ljson_analyzer ; \
+		G_SLICE=always-malloc G_DEBUG=gc-friendly  valgrind -v --tool=memcheck --log-file=./$$test_file.valgrind --leak-check=full ./runner ; rm -rf ./runner; \
+		done

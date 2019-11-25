@@ -47,4 +47,6 @@ public:
     //! Method for Getting an implementor representing Json Array type
     //! @return pointer to JsonArrayRep
     virtual JsonArrayRep* GetJsonArray() = 0;
+
+    virtual ~ExpressionEvaluationInterface() = default;
 };

@@ -45,7 +45,7 @@ public:
     virtual void CleanUp() = 0;
 
     //! Dtor
-    virtual ~Statement() {}
+    virtual ~Statement() = default;
 };
 
 //! This class represents the match statement for the json stream
