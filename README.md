@@ -12,13 +12,13 @@ Json object is passed through one or more rule(s), if it matches any of the rule
 
 # Parent node being an array
 if json[0].method == "object.updated" {
-    if json[0].params.object.id == "205793453" {
+    if json[0].params.object.id == 205793453 {
         pp
     }
     # Iterate through the list
     for rule in json[0].params.object.rules {
         if rule.ruleName == "Match" {
-            if rule.active == "true" {
+            if rule.active == true {
                 pp
             }
         }
@@ -51,13 +51,14 @@ Check these [sample rules](https://github.com/ranjithum/Json-Analyzer/tree/maste
 > * Supports comparison in the form of string.
 > * Supports implementation in [c++](https://github.com/ranjithum/Json-Analyzer/tree/master/cpp).
 
+## Supported features in version-2.0
+> * Supports comparison of basic data types like string, int64, bool, double.
+> * Supports more comparison operators like >, >=, <, <=, ==.
+
 ## Supported features in upcoming release
-> * Support for basic data types (int64, uint64, float, bool).
-> * Support for more comparison operators (!=, >=, <=, >, <).
 > * **GOLANG** support.
 > * **PYTHON** support.
 
 ## Some Caveats
-* Supports only string comparison, all other basic data types must be converted to string (in "").
 * Beggining of the line must not be empty.
 * Validation of the statements are not done.
