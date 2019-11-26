@@ -33,7 +33,7 @@ Once built you should be able to see `libjson_analyzer.so` library.
 $ apt install cmake flex bison
 $ git submodule update --init
 $ mkdir build; cd build
-$ cmake .. -DBuildTest=ON
+$ cmake .. -DBuildTest=ON; make
 $ ls libjson_analyzer.so
 libjson_analyzer.so
 ```
@@ -82,7 +82,7 @@ int main()
 
 $ cat GOT_CHAR.rule
 # Basically i m filtering any character who are aged 26
-if json.age == "26" {
+if json.age == 26 {
 pp
 }
 
