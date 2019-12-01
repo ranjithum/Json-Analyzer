@@ -13,6 +13,7 @@ import (
 	boolValue	bool
 	comparator	Comparator
 	comparevalue *CompareValue
+	ident *Identifier
 }
 
 %token IN IF FOR END
@@ -29,6 +30,7 @@ import (
 
 %type <comparator> COMPARATOR 
 %type <comparevalue> COMPARING_VALUE
+%type <ident> STRING_IDENTIFIER
 %%
 
 statements :
@@ -92,15 +94,25 @@ exp :
 STRING_IDENTIFIER :
 	IDENTIFIER
 	{
-	fmt.Println("IDENTIFIER")
+		fmt.Println("IDENTIFIER")
+		$$ = &Identifier {
+			m_expression: $1,
+			}
 	}
 	| DOT IDENTIFIER
 	{
-	fmt.Println("DOT IDENTIFIER")
+		fmt.Println("DOT IDENTIFIER")
+		$$ = &Identifier {
+			m_expression: $2,
+			}
 	}
 	| STRING_IDENTIFIER '[' SIGNED_VALUE ']'
 	{
-	fmt.Println("STRING_IDENTIFIER [ SIGNED_VALUE ]")
+		fmt.Println("STRING_IDENTIFIER [ SIGNED_VALUE ]")
+		if $1 == nil {
+			$1 = &Identifier{}
+		}
+		$1.AddIndex(int($3))
 	}
 
 START_BRACE :
