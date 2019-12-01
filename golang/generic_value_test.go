@@ -6,10 +6,7 @@ func TestCompareValue(t *testing.T) {
 	var oper Comparator
 	oper = &CompareEqualTo{}
 
-	compareValue := CompareValue{
-		m_dataType: STRING,
-		m_rhsValue: "Vegeta",
-	}
+	compareValue := NewCompareValue(STRING, "Vegeta")
 
 	compareValue.SetComparator(oper)
 	bVal := compareValue.CompareIt("Vegeta")

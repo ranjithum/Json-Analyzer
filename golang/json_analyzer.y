@@ -84,7 +84,7 @@ exp :
 	| JSON '[' SIGNED_VALUE ']'
 	{
 		fmt.Println("JSON [ SIGNED_VALUE ]")
-		$$ = NewJsonExpression($3)
+		$$ = NewJsonExpression(int($3))
 	}
 	| STRING_IDENTIFIER
 	{
@@ -102,22 +102,18 @@ STRING_IDENTIFIER :
 	IDENTIFIER
 	{
 		fmt.Println("IDENTIFIER")
-		$$ = &Identifier {
-			m_expression: $1,
-			}
+		$$ = NewIdentifier($1)
 	}
 	| DOT IDENTIFIER
 	{
 		fmt.Println("DOT IDENTIFIER")
-		$$ = &Identifier {
-			m_expression: $2,
-			}
+		$$ = NewIdentifier($2)
 	}
 	| STRING_IDENTIFIER '[' SIGNED_VALUE ']'
 	{
 		fmt.Println("STRING_IDENTIFIER [ SIGNED_VALUE ]")
 		if $1 == nil {
-			$1 = &Identifier{}
+			$1 = NewIdentifier("")
 		}
 		$1.AddIndex(int($3))
 	}
@@ -179,36 +175,24 @@ COMPARING_VALUE :
 	QUOTED_STRING
 	{
 		fmt.Println("Quoted String")
-		$$ = &CompareValue{
-			m_dataType: STRING,
-			m_rhsValue: $1,
-			}
+		$$ = NewCompareValue(STRING, $1)
 	}
 	|
 	SIGNED_VALUE
 	{
 		fmt.Println("Signed Value")
-		$$ = &CompareValue{
-			m_dataType: INT64,
-			m_rhsValue: $1,
-			}
+		$$ = NewCompareValue(INT64, $1)
 	}
 	|
 	BOOL_VALUE
 	{
 	fmt.Println("Bool Value")
-		$$ = &CompareValue{
-			m_dataType: BOOL,
-			m_rhsValue: $1,
-			}
+		$$ = NewCompareValue(BOOL, $1)
 	}
 	|
 	DOUBLE_VALUE
 	{
 		fmt.Println("Double Value")
-		$$ = &CompareValue{
-			m_dataType: DOUBLE,
-			m_rhsValue: $1,
-			}
+		$$ = NewCompareValue(DOUBLE, $1)
 	}
 %%

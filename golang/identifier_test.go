@@ -5,9 +5,8 @@ import (
 )
 
 func TestToString(t *testing.T) {
-	iden := &Identifier{
-		m_expression: "param",
-	}
+
+	iden := NewIdentifier("param")
 
 	iden.AddIndex(5)
 	iden.AddIndex(3)

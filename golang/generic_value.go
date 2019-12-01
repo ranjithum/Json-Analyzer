@@ -24,6 +24,13 @@ type CompareValue struct {
 	m_comparator Comparator
 }
 
+func NewCompareValue(dtype DataType, rhs interface{}) *CompareValue {
+	return &CompareValue{
+		m_dataType: dtype,
+		m_rhsValue: rhs,
+	}
+}
+
 func (cv *CompareValue) SetComparator(c Comparator) {
 	cv.m_comparator = c
 }

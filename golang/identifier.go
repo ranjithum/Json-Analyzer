@@ -10,10 +10,14 @@ type Identifier struct {
 	m_indices    []int
 }
 
-func (ident *Identifier) AddIndex(iVal int) {
-	if len(ident.m_indices) == 0 {
-		ident.m_indices = make([]int, 0)
+func NewIdentifier(expr string) *Identifier {
+	return &Identifier{
+		m_expression: expr,
+		m_indices:    make([]int, 0),
 	}
+}
+
+func (ident *Identifier) AddIndex(iVal int) {
 	ident.m_indices = append(ident.m_indices, iVal)
 }
 
