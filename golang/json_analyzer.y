@@ -12,6 +12,7 @@ import (
 	sint64Value int64
 	boolValue	bool
 	comparator	Comparator
+	comparevalue *CompareValue
 }
 
 %token IN IF FOR END
@@ -25,8 +26,9 @@ import (
 %token <doubleValue> DOUBLE_VALUE
 %token <boolValue> BOOL_VALUE
 %token <sint64Value> SIGNED_VALUE
-%type <comparator> COMPARATOR 
 
+%type <comparator> COMPARATOR 
+%type <comparevalue> COMPARING_VALUE
 %%
 
 statements :
@@ -58,9 +60,9 @@ print_packet :
 	}
 
 if_block :
-	IF exp COMPARATOR comparing_value START_BRACE code_block
+	IF exp COMPARATOR COMPARING_VALUE START_BRACE code_block
 	{
-	fmt.Println("IF exp COMPARATOR comparing_value START_BRACE code_block")
+	fmt.Println("IF exp COMPARATOR COMPARING_VALUE START_BRACE code_block")
 	}
 
 for_block :
@@ -154,24 +156,40 @@ COMPARATOR :
 		$$ = &CompareLessThan{}
 	}
 
-comparing_value :
+COMPARING_VALUE :
 	QUOTED_STRING
 	{
-	fmt.Println("Quoted String")
+		fmt.Println("Quoted String")
+		$$ = &CompareValue{
+			m_dataType: STRING,
+			m_rhsValue: $1,
+			}
 	}
 	|
 	SIGNED_VALUE
 	{
-	fmt.Println("Signed Value")
+		fmt.Println("Signed Value")
+		$$ = &CompareValue{
+			m_dataType: INT64,
+			m_rhsValue: $1,
+			}
 	}
 	|
 	BOOL_VALUE
 	{
 	fmt.Println("Bool Value")
+		$$ = &CompareValue{
+			m_dataType: BOOL,
+			m_rhsValue: $1,
+			}
 	}
 	|
 	DOUBLE_VALUE
 	{
-	fmt.Println("Double Value")
+		fmt.Println("Double Value")
+		$$ = &CompareValue{
+			m_dataType: DOUBLE,
+			m_rhsValue: $1,
+			}
 	}
 %%
