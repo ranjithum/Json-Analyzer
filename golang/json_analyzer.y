@@ -11,6 +11,7 @@ import (
 	doubleValue float64 
 	sint64Value int64
 	boolValue	bool
+	comparator	Comparator
 }
 
 %token IN IF FOR END
@@ -24,6 +25,7 @@ import (
 %token <doubleValue> DOUBLE_VALUE
 %token <boolValue> BOOL_VALUE
 %token <sint64Value> SIGNED_VALUE
+%type <comparator> COMPARATOR 
 
 %%
 
@@ -56,9 +58,9 @@ print_packet :
 	}
 
 if_block :
-	IF exp comparator comparing_value START_BRACE code_block
+	IF exp COMPARATOR comparing_value START_BRACE code_block
 	{
-	fmt.Println("IF exp comparator comparing_value START_BRACE code_block")
+	fmt.Println("IF exp COMPARATOR comparing_value START_BRACE code_block")
 	}
 
 for_block :
@@ -121,30 +123,35 @@ END_BLOCK :
 	fmt.Println("End Brance")
 	}
 
-comparator :
+COMPARATOR :
 	DOUBLE_EQUAL
 	{
-	fmt.Println("Double Equals")
+		fmt.Println("Double Equals")
+		$$ = &CompareEqualTo{}
 	}
 	|
 	GREATER_THAN_EQUAL
 	{
-	fmt.Println("Greater than Equal")
+		fmt.Println("Greater than Equal")
+		$$ = &CompareGreaterThanEqual{}
 	}
 	|
 	GREATER_THAN
 	{
-	fmt.Println("Greater than")
+		fmt.Println("Greater than")
+		$$ = &CompareGreaterThan{}
 	}
 	|
 	LESS_THAN_EQUAL
 	{
-	fmt.Println("Less than Equal")
+		fmt.Println("Less than Equal")
+		$$ = &CompareLessThanEqual{}
 	}
 	|
 	LESS_THAN
 	{
-	fmt.Println("Less than")
+		fmt.Println("Less than")
+		$$ = &CompareLessThan{}
 	}
 
 comparing_value :
