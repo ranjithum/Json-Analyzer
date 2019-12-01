@@ -14,6 +14,7 @@ import (
 	comparator	Comparator
 	comparevalue *CompareValue
 	ident *Identifier
+	expression GenericExpression
 }
 
 %token IN IF FOR END
@@ -31,6 +32,7 @@ import (
 %type <comparator> COMPARATOR 
 %type <comparevalue> COMPARING_VALUE
 %type <ident> STRING_IDENTIFIER
+%type <expression> exp
 %%
 
 statements :
@@ -76,19 +78,24 @@ for_block :
 exp :
 	JSON
 	{
-	fmt.Println("JSON");
+		fmt.Println("JSON")
+		$$ = NewJsonExpression(-1)
 	}
 	| JSON '[' SIGNED_VALUE ']'
 	{
-	fmt.Println("JSON [ SIGNED_VALUE ]")
+		fmt.Println("JSON [ SIGNED_VALUE ]")
+		$$ = NewJsonExpression($3)
 	}
 	| STRING_IDENTIFIER
 	{
-	fmt.Println("STRING_IDENTIFIER")
+		fmt.Println("STRING_IDENTIFIER")
+		$$ = NewNonJsonExpression()
+		$$.AddIdentifier($1)
 	}
 	| exp STRING_IDENTIFIER
 	{
-	fmt.Println("exp STRING_IDENTIFIER")
+		fmt.Println("exp STRING_IDENTIFIER")
+		$1.AddIdentifier($2)
 	}
 
 STRING_IDENTIFIER :
