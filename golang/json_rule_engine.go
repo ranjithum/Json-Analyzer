@@ -14,6 +14,7 @@ const (
 )
 
 type JsonRuleEngine struct {
+	m_listOfStatements listOfCodeBlocks
 }
 
 func NewJsonRuleEngine(filename string) (*JsonRuleEngine, error) {
@@ -25,11 +26,19 @@ func NewJsonRuleEngine(filename string) (*JsonRuleEngine, error) {
 
 	lex := newLexer(data)
 	e := yyParse(lex)
+
+	defer func() {
+		global_listOfCodeBlocks = nil
+	}()
+
 	if e != 0 {
 		return nil, errors.New("Parsing rules failed")
 	}
 
-	return &JsonRuleEngine{}, nil
+	return &JsonRuleEngine{
+		m_listOfStatements: global_listOfCodeBlocks,
+	}, nil
+
 }
 
 func (jR *JsonRuleEngine) ParseJsonStream(json_stream []byte) ErrorCode {
@@ -37,5 +46,5 @@ func (jR *JsonRuleEngine) ParseJsonStream(json_stream []byte) ErrorCode {
 }
 
 func (jR *JsonRuleEngine) ToString() string {
-	return global_listOfCodeBlocks.ToString()
+	return jR.m_listOfStatements.ToString()
 }
