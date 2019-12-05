@@ -63,7 +63,7 @@ func (lex *lexer) Lex(yylval *yySymType) int {
 		comment     = '#'+ (utf8 - newline)*;
 		commentline = whitespace* comment newline?;
 		identifier  = [a-zA-Z_][a-zA-Z0-9_]*;
-		quoted_string = dquote alnum* dquote ;
+		quoted_string = dquote (any - newline)* dquote ;
 		signed_value = [\-+]? digit+;
 		float_value = [\-+]? digit+ '.' digit+;
 
