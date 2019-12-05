@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestToString(t *testing.T) {
+func TestIdentifierToString(t *testing.T) {
 
 	iden := NewIdentifier("param")
 

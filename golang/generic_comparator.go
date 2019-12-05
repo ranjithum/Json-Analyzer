@@ -2,12 +2,17 @@ package main
 
 type Comparator interface {
 	CompareValue(lhs interface{}, rhs interface{}) bool
+	ToString() string
 }
 
 type CompareEqualTo struct{}
 
 func (c *CompareEqualTo) CompareValue(lhs interface{}, rhs interface{}) bool {
 	return (lhs == rhs)
+}
+
+func (c *CompareEqualTo) ToString() string {
+	return "=="
 }
 
 type CompareGreaterThanEqual struct{}
@@ -24,6 +29,10 @@ func (c *CompareGreaterThanEqual) CompareValue(lhs interface{}, rhs interface{})
 	return false
 }
 
+func (c *CompareGreaterThanEqual) ToString() string {
+	return ">="
+}
+
 type CompareGreaterThan struct{}
 
 func (c *CompareGreaterThan) CompareValue(lhs interface{}, rhs interface{}) bool {
@@ -36,6 +45,10 @@ func (c *CompareGreaterThan) CompareValue(lhs interface{}, rhs interface{}) bool
 		return d_type > rhs.(string)
 	}
 	return false
+}
+
+func (c *CompareGreaterThan) ToString() string {
+	return ">"
 }
 
 type CompareLessThanEqual struct{}
@@ -52,6 +65,10 @@ func (c *CompareLessThanEqual) CompareValue(lhs interface{}, rhs interface{}) bo
 	return false
 }
 
+func (c *CompareLessThanEqual) ToString() string {
+	return "<="
+}
+
 type CompareLessThan struct{}
 
 func (c *CompareLessThan) CompareValue(lhs interface{}, rhs interface{}) bool {
@@ -64,4 +81,8 @@ func (c *CompareLessThan) CompareValue(lhs interface{}, rhs interface{}) bool {
 		return d_type < rhs.(string)
 	}
 	return false
+}
+
+func (c *CompareLessThan) ToString() string {
+	return "<"
 }

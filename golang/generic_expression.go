@@ -8,6 +8,7 @@ import (
 type GenericExpression interface {
 	ToString() string
 	AddIdentifier(ident *Identifier)
+	GetValue() interface{}
 }
 
 type CommonExpression struct {
@@ -61,6 +62,10 @@ func (je *JsonExpression) ToString() string {
 	return expressionString.String()
 }
 
+func (je *JsonExpression) GetValue() interface{} {
+	return "json-expression"
+}
+
 type NonJsonExpression struct {
 	CommonExpression
 }
@@ -85,4 +90,8 @@ func (nje *NonJsonExpression) ToString() string {
 	}
 
 	return expressionString.String()
+}
+
+func (nje *NonJsonExpression) GetValue() interface{} {
+	return "non-json-expression"
 }

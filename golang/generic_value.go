@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type DataType int8
 
 const (
@@ -37,4 +39,8 @@ func (cv *CompareValue) SetComparator(c Comparator) {
 
 func (cv *CompareValue) CompareIt(lhs interface{}) bool {
 	return cv.m_comparator.CompareValue(lhs, cv.m_rhsValue)
+}
+
+func (cv *CompareValue) ToString() string {
+	return fmt.Sprintf("%v", cv.m_rhsValue)
 }

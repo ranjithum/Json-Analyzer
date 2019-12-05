@@ -126,3 +126,32 @@ func TestCompareLessThan(t *testing.T) {
 		t.Errorf("CompareLessThan(bool) got %v, want %v", bVal, false)
 	}
 }
+
+func TestCompareToString(t *testing.T) {
+	var oper Comparator
+	oper = &CompareEqualTo{}
+
+	if oper.ToString() != "==" {
+		t.Errorf("CompareEqualsToString : wants : %v, got %v", "==", oper.ToString())
+	}
+
+	oper = &CompareGreaterThanEqual{}
+	if oper.ToString() != ">=" {
+		t.Errorf("CompareGreaterThanEqualToString : wants : %v, got %v", ">=", oper.ToString())
+	}
+
+	oper = &CompareGreaterThan{}
+	if oper.ToString() != ">" {
+		t.Errorf("CompareGreaterThanToString : wants : %v, got : %v", ">", oper.ToString())
+	}
+
+	oper = &CompareLessThanEqual{}
+	if oper.ToString() != "<=" {
+		t.Errorf("CompareLessThanEqualToString : wants : %v, got : %v", "<=", oper.ToString())
+	}
+
+	oper = &CompareLessThan{}
+	if oper.ToString() != "<" {
+		t.Errorf("CompareLessThanEqual : wants : %v, got : %v", "<", oper.ToString())
+	}
+}
