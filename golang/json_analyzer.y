@@ -241,7 +241,9 @@ COMPARING_VALUE :
 	SIGNED_VALUE
 	{
 		//fmt.Println("Signed Value")
-		$$ = NewCompareValue(INT64, $1)
+		// Unfortunately the default Json package provided by go
+		// can unmarshall only float64, bool and string base type
+		$$ = NewCompareValue(DOUBLE, $1)
 	}
 	|
 	BOOL_VALUE

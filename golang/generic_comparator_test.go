@@ -4,12 +4,8 @@ import "testing"
 
 func TestCompareEqualTo(t *testing.T) {
 	var oper Comparator
+	var bVal bool
 	oper = &CompareEqualTo{}
-
-	bVal := oper.CompareValue(5, 10)
-	if bVal {
-		t.Errorf("CompareEqualTo(int64) got %v, want %v", bVal, false)
-	}
 
 	bVal = oper.CompareValue(true, false)
 	if bVal {
@@ -29,12 +25,8 @@ func TestCompareEqualTo(t *testing.T) {
 
 func TestCompareGreaterThanEqual(t *testing.T) {
 	var oper Comparator
+	var bVal bool
 	oper = &CompareGreaterThanEqual{}
-
-	bVal := oper.CompareValue(int64(255), int64(255))
-	if !bVal {
-		t.Errorf("CompareGreaterThanEqual(int64) got %v, want %v", bVal, true)
-	}
 
 	bVal = oper.CompareValue("gowdas", "Gowdas")
 	if !bVal {
@@ -54,12 +46,8 @@ func TestCompareGreaterThanEqual(t *testing.T) {
 
 func TestCompareGreaterThan(t *testing.T) {
 	var oper Comparator
+	var bVal bool
 	oper = &CompareGreaterThan{}
-
-	bVal := oper.CompareValue(int64(123456), int64(123455))
-	if !bVal {
-		t.Errorf("CompareGreaterThan(int64) got %v, want %v", bVal, true)
-	}
 
 	bVal = oper.CompareValue("gowdas", "GOWDAS")
 	if !bVal {
@@ -79,12 +67,8 @@ func TestCompareGreaterThan(t *testing.T) {
 
 func TestCompareLessThanEqual(t *testing.T) {
 	var oper Comparator
+	var bVal bool
 	oper = &CompareLessThanEqual{}
-
-	bVal := oper.CompareValue(int64(254), int64(255))
-	if !bVal {
-		t.Errorf("CompareLessThanEqual(int64) got %v, want %v", bVal, true)
-	}
 
 	bVal = oper.CompareValue("GOWDAS", "gowdas")
 	if !bVal {
@@ -104,12 +88,8 @@ func TestCompareLessThanEqual(t *testing.T) {
 
 func TestCompareLessThan(t *testing.T) {
 	var oper Comparator
+	var bVal bool
 	oper = &CompareLessThan{}
-
-	bVal := oper.CompareValue(int64(0), int64(1))
-	if !bVal {
-		t.Errorf("CompareLessThan(int64) got %v, want %v", bVal, true)
-	}
 
 	bVal = oper.CompareValue("GOWDA", "HYMAN")
 	if !bVal {

@@ -6,13 +6,12 @@ type DataType int8
 
 const (
 	BOOL DataType = iota
-	INT64
 	DOUBLE
 	STRING
 )
 
 func (d DataType) String() string {
-	return [...]string{"Bool", "Int64", "Double", "String"}[d]
+	return [...]string{"Bool", "Double", "String"}[d]
 }
 
 type CompareValue struct {

@@ -20,7 +20,7 @@ func TestIfBlockToString(t *testing.T) {
 	jsonExpr1.AddIdentifier(ident2)
 
 	oper := &CompareGreaterThanEqual{}
-	compareValue := NewCompareValue(INT64, 1234512)
+	compareValue := NewCompareValue(DOUBLE, 1234512)
 	compareValue.SetComparator(oper)
 
 	pifBlock := NewIfBlock(jsonExpr1, compareValue)
