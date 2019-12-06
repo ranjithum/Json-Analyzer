@@ -58,26 +58,24 @@ func TestValidateAndGetExprValue(t *testing.T) {
 }
 
 func TestFilterTest1(t *testing.T) {
-	/*
-		jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_1.rule")
+	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_1.rule")
 
-		if err != nil {
-			fmt.Println("Json Parse error : ", err)
-			return
-		}
+	if err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
 
-		json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
-		if j_err != nil {
-			fmt.Println("Json Parse error : ", err)
-			return
-		}
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
 
-		got := jR.ParseJsonStream(json_stream)
-		wants := OK
-		if got != wants {
-			t.Errorf("wants : %v, Got : %v", wants, got)
-		}
-	*/
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
 }
 
 func TestFilterTest2(t *testing.T) {
@@ -89,6 +87,26 @@ func TestFilterTest2(t *testing.T) {
 	}
 
 	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_2.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+}
+
+func TestFilterTest3(t *testing.T) {
+	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_3.rule")
+	if err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
 	if j_err != nil {
 		fmt.Println("Json Parse error : ", err)
 		return

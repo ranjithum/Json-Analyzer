@@ -2,8 +2,14 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"strconv"
+)
+
+type BlockType int8
+
+const (
+	IF_BLOCK BlockType = iota
+	FOR_BLOCK
 )
 
 type GenericExpression interface {
@@ -11,13 +17,20 @@ type GenericExpression interface {
 	AddIdentifier(ident *Identifier)
 	GetValue() interface{}
 	SetJsonDecoder(dec JsonByteDecoderInterface)
+	SetBlockType(_type BlockType)
 	CleanUp()
+	OperatorPlusPlus() bool
+	SetParent(blk GenericBlock)
+	GetJsonArray() interface{}
 }
 
 type CommonExpression struct {
 	m_listOfIdentifier []*Identifier
 	m_jsonDecoder      JsonByteDecoderInterface
-	m_jsonArray        []interface{}
+	m_jsonArray        interface{}
+	m_currentIndex     int
+	m_blockType        BlockType
+	m_parentBlock      GenericBlock
 }
 
 func (ce *CommonExpression) AddIdentifier(ident *Identifier) {
@@ -32,8 +45,25 @@ func (ce *CommonExpression) SetJsonDecoder(decoder JsonByteDecoderInterface) {
 	ce.m_jsonDecoder = decoder
 }
 
+func (ce *CommonExpression) SetBlockType(_type BlockType) {
+	ce.m_blockType = _type
+}
+
 func (ce *CommonExpression) CleanUp() {
 	ce.m_jsonArray = nil
+	ce.m_currentIndex = -1
+}
+
+func (ce *CommonExpression) SetParent(blk GenericBlock) {
+	ce.m_parentBlock = blk
+}
+
+func (ce *CommonExpression) GetJsonArray() interface{} {
+	switch arr_interface := ce.m_jsonArray.(type) {
+	case []interface{}:
+		return arr_interface[ce.m_currentIndex]
+	}
+	return nil
 }
 
 type JsonExpression struct {
@@ -46,6 +76,7 @@ func NewJsonExpression(index int) *JsonExpression {
 		m_index: index,
 		CommonExpression: CommonExpression{
 			m_listOfIdentifier: make([]*Identifier, 0),
+			m_currentIndex:     -1,
 		},
 	}
 }
@@ -76,12 +107,28 @@ func (je *JsonExpression) ToString() string {
 }
 
 func (je *JsonExpression) GetValue() interface{} {
-
-	if je.m_jsonDecoder == nil {
-		fmt.Println("je.m_jsonDecoder is nil")
+	if je.m_blockType == IF_BLOCK {
+		return je.m_jsonDecoder.ValidateAndGetExprValue(je)
+	} else {
+		je.m_jsonArray = je.m_jsonDecoder.ValidateAndGetJsonArray(je)
+		if je.m_jsonArray != nil {
+			je.m_currentIndex = 0
+			return true
+		}
 	}
+	return nil
+}
 
-	return je.m_jsonDecoder.ValidateAndGetExprValue(je)
+func (je *JsonExpression) OperatorPlusPlus() bool {
+	je.m_currentIndex += 1
+	switch arr_interface := je.m_jsonArray.(type) {
+	case []interface{}:
+		if len(arr_interface) < je.m_currentIndex {
+			return false
+		}
+		return true
+	}
+	return false
 }
 
 type NonJsonExpression struct {
@@ -92,6 +139,7 @@ func NewNonJsonExpression() *NonJsonExpression {
 	return &NonJsonExpression{
 		CommonExpression: CommonExpression{
 			m_listOfIdentifier: make([]*Identifier, 0),
+			m_currentIndex:     -1,
 		},
 	}
 }
@@ -111,5 +159,13 @@ func (nje *NonJsonExpression) ToString() string {
 }
 
 func (nje *NonJsonExpression) GetValue() interface{} {
-	return "non-json-expression"
+	if nje.m_blockType == IF_BLOCK {
+		return nje.m_jsonDecoder.ValidateAndGetExprValueFromArray(nje, nje.m_parentBlock.GetJsonValueArray(nje.m_listOfIdentifier[0].m_expression))
+	} else {
+	}
+	return nil
+}
+
+func (nje *NonJsonExpression) OperatorPlusPlus() bool {
+	return true
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 )
 
 type PrintPacketBlock struct {
@@ -17,13 +16,21 @@ func (pp *PrintPacketBlock) ToString() string {
 }
 
 func (pp *PrintPacketBlock) AddCodeBlocks(blk GenericBlock) {
-	panic("This is a leaf statement.. No one is supposed to call this")
+	panic("This is a leaf statement.. No one is supposed to call AddCodeBlocks")
 }
 
 func (pp *PrintPacketBlock) CleanUp() {
 }
 
 func (pp *PrintPacketBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
+}
+
+func (pp *PrintPacketBlock) SetParentBlock(blk GenericBlock) {
+}
+
+func (pp *PrintPacketBlock) GetJsonValueArray(match string) interface{} {
+	panic("This is a leaf statement.. No one is supposed to call GetJsonValueArray")
+	return nil
 }
 
 func NewPrintPacketBlock() *PrintPacketBlock {
@@ -34,15 +41,15 @@ type IfBlock struct {
 	m_lhsExpression GenericExpression
 	m_rhsValue      *CompareValue
 	m_codeBlocks    *listOfCodeBlocks
+	m_parentBlock   GenericBlock
 }
 
 func (ifblk *IfBlock) EvaluateBlock() bool {
 	lhs_v := ifblk.m_lhsExpression.GetValue()
-	rhs_v := ifblk.m_rhsValue.m_rhsValue
-	fmt.Print(lhs_v, " "+ifblk.m_rhsValue.m_comparator.ToString()+" ", rhs_v)
+	//fmt.Print(lhs_v, " "+ifblk.m_rhsValue.m_comparator.ToString()+" ", ifblk.m_rhsValue.m_rhsValue)
 
 	if ifblk.m_rhsValue.CompareIt(lhs_v) {
-		fmt.Println(" : Passed")
+		//fmt.Println(" : Passed")
 		for _, eachBlk := range *ifblk.m_codeBlocks {
 			// fmt.Println(eachBlk.ToString())
 			if eachBlk.EvaluateBlock() {
@@ -51,7 +58,7 @@ func (ifblk *IfBlock) EvaluateBlock() bool {
 		}
 		return true
 	}
-	fmt.Println(" : Failed")
+	//fmt.Println(" : Failed")
 	return false
 }
 
@@ -74,6 +81,14 @@ func (ifblk *IfBlock) ToString() string {
 func (ifblk *IfBlock) CleanUp() {
 }
 
+func (ifblk *IfBlock) SetParentBlock(blk GenericBlock) {
+	ifblk.m_parentBlock = blk
+	ifblk.m_lhsExpression.SetParent(ifblk)
+	for _, eachBlk := range *ifblk.m_codeBlocks {
+		eachBlk.SetParentBlock(ifblk)
+	}
+}
+
 func (ifblk *IfBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
 	ifblk.m_lhsExpression.SetJsonDecoder(dec)
 	for _, eachBlk := range *ifblk.m_codeBlocks {
@@ -81,11 +96,17 @@ func (ifblk *IfBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
 	}
 }
 
+func (ifblk *IfBlock) GetJsonValueArray(match string) interface{} {
+	return ifblk.m_parentBlock.GetJsonValueArray(match)
+}
+
 func NewIfBlock(lhsExpr GenericExpression, rhs *CompareValue) *IfBlock {
+	lhsExpr.SetBlockType(IF_BLOCK)
 	return &IfBlock{
 		m_lhsExpression: lhsExpr,
 		m_rhsValue:      rhs,
 		m_codeBlocks:    NewListOfCodeBlock(),
+		m_parentBlock:   nil,
 	}
 }
 
@@ -93,10 +114,26 @@ type ForBlock struct {
 	m_lhsIdentifier string
 	m_rhsExpression GenericExpression
 	m_codeBlocks    *listOfCodeBlocks
+	m_parentBlock   GenericBlock
 }
 
 func (forblk *ForBlock) EvaluateBlock() bool {
-	return true
+
+	for retVal := forblk.m_rhsExpression.GetValue(); retVal != nil; {
+
+		for _, eachBlk := range *forblk.m_codeBlocks {
+			// fmt.Println(eachBlk.ToString())
+			if eachBlk.EvaluateBlock() {
+				return true
+			}
+		}
+
+		if !forblk.m_rhsExpression.OperatorPlusPlus() {
+			break
+		}
+	}
+
+	return false
 }
 
 func (forblk *ForBlock) AddCodeBlocks(blk GenericBlock) {
@@ -125,10 +162,27 @@ func (forblk *ForBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
 	}
 }
 
+func (forblk *ForBlock) SetParentBlock(blk GenericBlock) {
+	forblk.m_parentBlock = blk
+	forblk.m_rhsExpression.SetParent(forblk)
+	for _, eachBlk := range *forblk.m_codeBlocks {
+		eachBlk.SetParentBlock(forblk)
+	}
+}
+
+func (forblk *ForBlock) GetJsonValueArray(match string) interface{} {
+	if match == forblk.m_lhsIdentifier {
+		return forblk.m_rhsExpression.GetJsonArray()
+	}
+	return forblk.m_parentBlock.GetJsonValueArray(match)
+}
+
 func NewForBlock(lhs_ident string, rhs GenericExpression) *ForBlock {
+	rhs.SetBlockType(FOR_BLOCK)
 	return &ForBlock{
 		m_lhsIdentifier: lhs_ident,
 		m_rhsExpression: rhs,
 		m_codeBlocks:    NewListOfCodeBlock(),
+		m_parentBlock:   nil,
 	}
 }

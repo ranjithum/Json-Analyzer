@@ -18,8 +18,8 @@ const (
 
 type JsonByteDecoderInterface interface {
 	ValidateAndGetExprValue(expr GenericExpression) interface{}
-	ValidateAndGetJsonArray(expr GenericExpression) []interface{}
-	ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr []interface{}) interface{}
+	ValidateAndGetJsonArray(expr GenericExpression) interface{}
+	ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr interface{}) interface{}
 	ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr []interface{}) []interface{}
 }
 
@@ -52,6 +52,7 @@ func NewJsonRuleEngine(filename string) (*JsonRuleEngine, error) {
 
 	for _, eachBlock := range jR.m_listOfStatements {
 		eachBlock.SetJsonDecoder(jR)
+		eachBlock.SetParentBlock(nil)
 	}
 
 	return jR, nil
@@ -101,7 +102,7 @@ func GetNextValueFromIndex(decoded_json interface{}, index int) interface{} {
 	return nil
 }
 
-func (jR *JsonRuleEngine) ValidateAndGetExprValue(expr GenericExpression) interface{} {
+func ValidateAndGetJsonExpression(expr GenericExpression, json_data interface{}) interface{} {
 
 	var actual_json interface{}
 	var final_value interface{}
@@ -111,24 +112,24 @@ func (jR *JsonRuleEngine) ValidateAndGetExprValue(expr GenericExpression) interf
 		// If json index is specified, then decoded json
 		// must be of array type
 		if e.m_index > -1 {
-			switch jR.m_decodedJson.(type) {
+			switch json_data.(type) {
 			case []interface{}:
 				// If provided index is greater than available length
 				// then its not valid
-				if e.m_index+1 >= len(jR.m_decodedJson.([]interface{})) {
-					actual_json = jR.m_decodedJson.([]interface{})[e.m_index]
+				if e.m_index+1 >= len(json_data.([]interface{})) {
+					actual_json = json_data.([]interface{})[e.m_index]
 					valid = true
 				}
 			}
 		} else {
-			switch jR.m_decodedJson.(type) {
+			switch json_data.(type) {
 			case map[string]interface{}:
-				actual_json = jR.m_decodedJson
+				actual_json = json_data
 				valid = true
 			}
 		}
 		if !valid {
-			fmt.Println("Json Message is of Type : ", reflect.TypeOf(jR.m_decodedJson), " But rule is : ", e.ToString())
+			fmt.Println("Json Message is of Type : ", reflect.TypeOf(json_data), " But rule is : ", e.ToString())
 			return nil
 		}
 
@@ -146,15 +147,42 @@ func (jR *JsonRuleEngine) ValidateAndGetExprValue(expr GenericExpression) interf
 				}
 			}
 		}
+	case *NonJsonExpression:
+		final_value = json_data
+		for _, eachIdentifier := range e.m_listOfIdentifier[1:] {
+			final_value = GetNextValueFromkey(final_value, eachIdentifier.m_expression)
+			if final_value == nil {
+				return nil
+			}
+
+			for _, eachIndex := range eachIdentifier.m_indices {
+				final_value = GetNextValueFromIndex(final_value, eachIndex)
+				if final_value == nil {
+					return nil
+				}
+			}
+		}
 	}
 	return final_value
+
 }
-func (jR *JsonRuleEngine) ValidateAndGetJsonArray(expr GenericExpression) []interface{} {
-	var arr_inteface []interface{}
-	return arr_inteface
+
+func (jR *JsonRuleEngine) ValidateAndGetExprValue(expr GenericExpression) interface{} {
+	return ValidateAndGetJsonExpression(expr, jR.m_decodedJson)
 }
-func (jR *JsonRuleEngine) ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr []interface{}) interface{} {
-	return "hello"
+
+func (jR *JsonRuleEngine) ValidateAndGetJsonArray(expr GenericExpression) interface{} {
+	var json_array interface{}
+	json_array = ValidateAndGetJsonExpression(expr, jR.m_decodedJson)
+
+	switch json_array.(type) {
+	case []interface{}:
+		return json_array
+	}
+	return nil
+}
+func (jR *JsonRuleEngine) ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr interface{}) interface{} {
+	return ValidateAndGetJsonExpression(expr, value_arr)
 }
 func (jR *JsonRuleEngine) ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr []interface{}) []interface{} {
 	var arr_inteface []interface{}

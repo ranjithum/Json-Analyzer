@@ -10,6 +10,8 @@ type GenericBlock interface {
 	AddCodeBlocks(blk GenericBlock)
 	CleanUp()
 	SetJsonDecoder(dec JsonByteDecoderInterface)
+	SetParentBlock(blk GenericBlock)
+	GetJsonValueArray(match string) interface{}
 }
 
 type listOfCodeBlocks []GenericBlock
