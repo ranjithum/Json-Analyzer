@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type DataType int8
 
@@ -26,6 +29,12 @@ type CompareValue struct {
 }
 
 func NewCompareValue(dtype DataType, rhs interface{}) *CompareValue {
+
+	switch rhs.(type) {
+	case string:
+		rhs = strings.Trim(rhs.(string), "\"")
+	}
+
 	return &CompareValue{
 		m_dataType: dtype,
 		m_rhsValue: rhs,

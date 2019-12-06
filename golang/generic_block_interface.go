@@ -9,6 +9,7 @@ type GenericBlock interface {
 	ToString() string
 	AddCodeBlocks(blk GenericBlock)
 	CleanUp()
+	SetJsonDecoder(dec JsonByteDecoderInterface)
 }
 
 type listOfCodeBlocks []GenericBlock

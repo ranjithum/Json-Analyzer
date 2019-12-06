@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 )
 
 type PrintPacketBlock struct {
@@ -22,6 +23,9 @@ func (pp *PrintPacketBlock) AddCodeBlocks(blk GenericBlock) {
 func (pp *PrintPacketBlock) CleanUp() {
 }
 
+func (pp *PrintPacketBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
+}
+
 func NewPrintPacketBlock() *PrintPacketBlock {
 	return &PrintPacketBlock{}
 }
@@ -33,9 +37,21 @@ type IfBlock struct {
 }
 
 func (ifblk *IfBlock) EvaluateBlock() bool {
-	if ifblk.m_rhsValue.CompareIt(ifblk.m_lhsExpression.GetValue()) {
+	lhs_v := ifblk.m_lhsExpression.GetValue()
+	rhs_v := ifblk.m_rhsValue.m_rhsValue
+	fmt.Print(lhs_v, " "+ifblk.m_rhsValue.m_comparator.ToString()+" ", rhs_v)
+
+	if ifblk.m_rhsValue.CompareIt(lhs_v) {
+		fmt.Println(" : Passed")
+		for _, eachBlk := range *ifblk.m_codeBlocks {
+			// fmt.Println(eachBlk.ToString())
+			if eachBlk.EvaluateBlock() {
+				return true
+			}
+		}
 		return true
 	}
+	fmt.Println(" : Failed")
 	return false
 }
 
@@ -56,6 +72,13 @@ func (ifblk *IfBlock) ToString() string {
 }
 
 func (ifblk *IfBlock) CleanUp() {
+}
+
+func (ifblk *IfBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
+	ifblk.m_lhsExpression.SetJsonDecoder(dec)
+	for _, eachBlk := range *ifblk.m_codeBlocks {
+		eachBlk.SetJsonDecoder(dec)
+	}
 }
 
 func NewIfBlock(lhsExpr GenericExpression, rhs *CompareValue) *IfBlock {
@@ -93,6 +116,13 @@ func (forblk *ForBlock) ToString() string {
 }
 
 func (forblk *ForBlock) CleanUp() {
+}
+
+func (forblk *ForBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {
+	forblk.m_rhsExpression.SetJsonDecoder(dec)
+	for _, eachBlk := range *forblk.m_codeBlocks {
+		eachBlk.SetJsonDecoder(dec)
+	}
 }
 
 func NewForBlock(lhs_ident string, rhs GenericExpression) *ForBlock {

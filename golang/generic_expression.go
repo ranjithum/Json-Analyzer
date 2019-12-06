@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 )
 
@@ -75,6 +76,11 @@ func (je *JsonExpression) ToString() string {
 }
 
 func (je *JsonExpression) GetValue() interface{} {
+
+	if je.m_jsonDecoder == nil {
+		fmt.Println("je.m_jsonDecoder is nil")
+	}
+
 	return je.m_jsonDecoder.ValidateAndGetExprValue(je)
 }
 

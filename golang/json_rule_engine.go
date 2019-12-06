@@ -46,10 +46,15 @@ func NewJsonRuleEngine(filename string) (*JsonRuleEngine, error) {
 		return nil, errors.New("Parsing rules failed")
 	}
 
-	return &JsonRuleEngine{
+	jR := &JsonRuleEngine{
 		m_listOfStatements: global_listOfCodeBlocks,
-	}, nil
+	}
 
+	for _, eachBlock := range jR.m_listOfStatements {
+		eachBlock.SetJsonDecoder(jR)
+	}
+
+	return jR, nil
 }
 
 func (jR *JsonRuleEngine) ParseJsonStream(json_stream []byte) ErrorCode {
