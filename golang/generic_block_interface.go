@@ -8,6 +8,7 @@ type GenericBlock interface {
 	EvaluateBlock() bool
 	ToString() string
 	AddCodeBlocks(blk GenericBlock)
+	CleanUp()
 }
 
 type listOfCodeBlocks []GenericBlock

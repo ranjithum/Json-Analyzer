@@ -19,6 +19,9 @@ func (pp *PrintPacketBlock) AddCodeBlocks(blk GenericBlock) {
 	panic("This is a leaf statement.. No one is supposed to call this")
 }
 
+func (pp *PrintPacketBlock) CleanUp() {
+}
+
 func NewPrintPacketBlock() *PrintPacketBlock {
 	return &PrintPacketBlock{}
 }
@@ -50,6 +53,9 @@ func (ifblk *IfBlock) ToString() string {
 	if_blk_string.WriteString(ifblk.m_codeBlocks.ToString())
 	if_blk_string.WriteString("\n}\n")
 	return if_blk_string.String()
+}
+
+func (ifblk *IfBlock) CleanUp() {
 }
 
 func NewIfBlock(lhsExpr GenericExpression, rhs *CompareValue) *IfBlock {
@@ -84,6 +90,9 @@ func (forblk *ForBlock) ToString() string {
 	for_blk_string.WriteString(forblk.m_codeBlocks.ToString())
 	for_blk_string.WriteString("\n}\n")
 	return for_blk_string.String()
+}
+
+func (forblk *ForBlock) CleanUp() {
 }
 
 func NewForBlock(lhs_ident string, rhs GenericExpression) *ForBlock {

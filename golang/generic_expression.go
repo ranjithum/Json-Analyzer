@@ -9,10 +9,14 @@ type GenericExpression interface {
 	ToString() string
 	AddIdentifier(ident *Identifier)
 	GetValue() interface{}
+	SetJsonDecoder(dec JsonByteDecoderInterface)
+	CleanUp()
 }
 
 type CommonExpression struct {
 	m_listOfIdentifier []*Identifier
+	m_jsonDecoder      JsonByteDecoderInterface
+	m_jsonArray        []interface{}
 }
 
 func (ce *CommonExpression) AddIdentifier(ident *Identifier) {
@@ -21,6 +25,14 @@ func (ce *CommonExpression) AddIdentifier(ident *Identifier) {
 	}
 
 	ce.m_listOfIdentifier = append(ce.m_listOfIdentifier, ident)
+}
+
+func (ce *CommonExpression) SetJsonDecoder(decoder JsonByteDecoderInterface) {
+	ce.m_jsonDecoder = decoder
+}
+
+func (ce *CommonExpression) CleanUp() {
+	ce.m_jsonArray = nil
 }
 
 type JsonExpression struct {
@@ -63,7 +75,7 @@ func (je *JsonExpression) ToString() string {
 }
 
 func (je *JsonExpression) GetValue() interface{} {
-	return "json-expression"
+	return je.m_jsonDecoder.ValidateAndGetExprValue(je)
 }
 
 type NonJsonExpression struct {
