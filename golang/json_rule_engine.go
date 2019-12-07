@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
+	"io"
 	"io/ioutil"
+	"os"
 	"reflect"
 )
 
@@ -20,7 +21,7 @@ type JsonByteDecoderInterface interface {
 	ValidateAndGetExprValue(expr GenericExpression) interface{}
 	ValidateAndGetJsonArray(expr GenericExpression) interface{}
 	ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr interface{}) interface{}
-	ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr []interface{}) []interface{}
+	ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr interface{}) interface{}
 }
 
 type JsonRuleEngine struct {
@@ -55,6 +56,10 @@ func NewJsonRuleEngine(filename string) (*JsonRuleEngine, error) {
 		eachBlock.SetParentBlock(nil)
 	}
 
+	var filePtr *io.Writer = new(io.Writer)
+	*filePtr = os.Stdout
+	GetLogger().InitLogger(filePtr)
+
 	return jR, nil
 }
 
@@ -70,7 +75,7 @@ func (jR *JsonRuleEngine) ParseJsonStream(json_stream []byte) ErrorCode {
 	err := json.Unmarshal(json_stream, &jR.m_decodedJson)
 
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		GetLogger().Error("json.Unmarshal error : ", err)
 		return JSON_STREAM_ERROR
 	}
 
@@ -121,6 +126,7 @@ func ValidateAndGetJsonExpression(expr GenericExpression, json_data interface{})
 					valid = true
 				}
 			}
+			GetLogger().Info("Json index is specfied in the rule, but this is not a array json")
 		} else {
 			switch json_data.(type) {
 			case map[string]interface{}:
@@ -132,7 +138,7 @@ func ValidateAndGetJsonExpression(expr GenericExpression, json_data interface{})
 			}
 		}
 		if !valid {
-			fmt.Println("Json Message is of Type : ", reflect.TypeOf(json_data), " But rule is : ", e.ToString())
+			GetLogger().Info("Json Message is of Type : ", reflect.TypeOf(json_data), " But rule is : ", e.ToString())
 			return nil
 		}
 
@@ -187,7 +193,14 @@ func (jR *JsonRuleEngine) ValidateAndGetJsonArray(expr GenericExpression) interf
 func (jR *JsonRuleEngine) ValidateAndGetExprValueFromArray(expr GenericExpression, value_arr interface{}) interface{} {
 	return ValidateAndGetJsonExpression(expr, value_arr)
 }
-func (jR *JsonRuleEngine) ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr []interface{}) []interface{} {
-	var arr_inteface []interface{}
-	return arr_inteface
+func (jR *JsonRuleEngine) ValidateAndGetJsonArrayFromArray(expr GenericExpression, value_arr interface{}) interface{} {
+
+	var json_array interface{}
+	json_array = ValidateAndGetJsonExpression(expr, value_arr)
+
+	switch json_array.(type) {
+	case []interface{}:
+		return json_array
+	}
+	return nil
 }
