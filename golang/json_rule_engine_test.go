@@ -133,6 +133,7 @@ func TestFilterTestBackery(t *testing.T) {
 		return
 	}
 
+	//GetLogger().SetLogLevel(DEBUG_LEVEL)
 	got := jR.ParseJsonStream(json_stream)
 	wants := OK
 	if got != wants {

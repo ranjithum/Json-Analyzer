@@ -123,7 +123,7 @@ func (je *JsonExpression) OperatorPlusPlus() bool {
 	je.m_currentIndex += 1
 	switch arr_interface := je.m_jsonArray.(type) {
 	case []interface{}:
-		if len(arr_interface) < je.m_currentIndex {
+		if len(arr_interface) < je.m_currentIndex+1 {
 			return false
 		}
 		return true

@@ -46,19 +46,22 @@ type IfBlock struct {
 
 func (ifblk *IfBlock) EvaluateBlock() bool {
 	lhs_v := ifblk.m_lhsExpression.GetValue()
-	//fmt.Print(lhs_v, " "+ifblk.m_rhsValue.m_comparator.ToString()+" ", ifblk.m_rhsValue.m_rhsValue)
+	GetLogger().Info(lhs_v, " "+ifblk.m_rhsValue.m_comparator.ToString()+" ", ifblk.m_rhsValue.m_rhsValue)
 
 	if ifblk.m_rhsValue.CompareIt(lhs_v) {
-		//fmt.Println(" : Passed")
+		GetLogger().Info(" : Passed")
 		for _, eachBlk := range *ifblk.m_codeBlocks {
-			// fmt.Println(eachBlk.ToString())
+			GetLogger().Debug("Evaluating block inside If : ", eachBlk.ToString())
 			if eachBlk.EvaluateBlock() {
 				return true
 			}
 		}
-		return true
+
+		if len(*ifblk.m_codeBlocks) < 1 {
+			return true
+		}
 	}
-	//fmt.Println(" : Failed")
+	GetLogger().Info(" : Failed")
 	return false
 }
 
@@ -123,10 +126,11 @@ type ForBlock struct {
 
 func (forblk *ForBlock) EvaluateBlock() bool {
 
+	GetLogger().Debug(" Evaluating For Block with identifier :", forblk.m_lhsIdentifier, " ", forblk.ToString())
 	for retVal := forblk.m_rhsExpression.GetValue(); retVal != nil; {
 
 		for _, eachBlk := range *forblk.m_codeBlocks {
-			// fmt.Println(eachBlk.ToString())
+			GetLogger().Debug("Evaluating block inside for : ", eachBlk.ToString())
 			if eachBlk.EvaluateBlock() {
 				return true
 			}
@@ -136,7 +140,7 @@ func (forblk *ForBlock) EvaluateBlock() bool {
 			break
 		}
 	}
-
+	GetLogger().Debug("For Block Evaluation failed for identifier: ", forblk.m_lhsIdentifier)
 	return false
 }
 

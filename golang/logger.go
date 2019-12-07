@@ -25,13 +25,9 @@ func (lgr *Logger) InitLogger(file_ptr *io.Writer) {
 
 	lgr.m_logChannel = make(map[LOG_LEVEL]*log.Logger, 4)
 
-	lgr.m_logChannel[DEBUG_LEVEL] = log.New(*file_ptr,
-		"DEBUG: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
+	lgr.m_logChannel[DEBUG_LEVEL] = log.New(*file_ptr, "DEBUG: ", log.Lshortfile)
 
-	lgr.m_logChannel[INFO_LEVEL] = log.New(*file_ptr,
-		"INFO: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
+	lgr.m_logChannel[INFO_LEVEL] = log.New(*file_ptr, "INFO: ", log.Lshortfile)
 
 	lgr.m_logChannel[WARNING_LEVEL] = log.New(*file_ptr,
 		"WARNING: ",
@@ -50,28 +46,28 @@ func (lgr *Logger) SetLogLevel(level LOG_LEVEL) {
 
 func (lgr *Logger) Debug(v ...interface{}) {
 	if lgr.m_currentLogLevel >= DEBUG_LEVEL {
-		lgr.m_logChannel[lgr.m_currentLogLevel].Output(2, fmt.Sprint(v...))
+		lgr.m_logChannel[DEBUG_LEVEL].Output(2, fmt.Sprint(v...))
 	}
 }
 
 func (lgr *Logger) Info(v ...interface{}) {
 
 	if lgr.m_currentLogLevel >= INFO_LEVEL {
-		lgr.m_logChannel[lgr.m_currentLogLevel].Output(2, fmt.Sprint(v...))
+		lgr.m_logChannel[INFO_LEVEL].Output(2, fmt.Sprint(v...))
 	}
 }
 
 func (lgr *Logger) Warning(v ...interface{}) {
 
 	if lgr.m_currentLogLevel >= WARNING_LEVEL {
-		lgr.m_logChannel[lgr.m_currentLogLevel].Output(2, fmt.Sprint(v...))
+		lgr.m_logChannel[WARNING_LEVEL].Output(2, fmt.Sprint(v...))
 	}
 }
 
 func (lgr *Logger) Error(v ...interface{}) {
 
 	if lgr.m_currentLogLevel >= ERROR_LEVEL {
-		lgr.m_logChannel[lgr.m_currentLogLevel].Output(2, fmt.Sprint(v...))
+		lgr.m_logChannel[ERROR_LEVEL].Output(2, fmt.Sprint(v...))
 	}
 }
 
