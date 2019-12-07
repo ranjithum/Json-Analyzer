@@ -93,7 +93,7 @@ func (lex *lexer) Lex(yylval *yySymType) int {
 				//fmt.Println(".")
 				fbreak;
 			};
-			newline =>
+			newline+ =>
 			{
 				//fmt.Println("newline")
 				current_token = END;
