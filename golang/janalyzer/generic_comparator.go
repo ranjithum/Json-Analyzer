@@ -1,4 +1,4 @@
-package main
+package janalyzer
 
 type Comparator interface {
 	CompareValue(lhs interface{}, rhs interface{}) bool

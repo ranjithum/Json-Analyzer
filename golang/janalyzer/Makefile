@@ -5,10 +5,11 @@ JSON_GO_REGEL_IN = json_analyzer.rl
 JSON_GO_YACC_IN = json_analyzer.y
 JSON_GO_YACC_OUT = json_analyzer_yacc.go
 
-BIN = ./analyzer
-
 build: $(JSON_GO_LEX_OUT) $(JSON_GO_YACC_OUT)
-	go build -ldflags "-w -s" -o $(BIN)
+	go build
+
+test:
+	go test
 
 $(JSON_GO_YACC_OUT) : $(JSON_GO_YACC_IN)
 	goyacc -o $(@) $^

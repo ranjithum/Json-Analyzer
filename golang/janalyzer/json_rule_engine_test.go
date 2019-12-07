@@ -1,4 +1,4 @@
-package main
+package janalyzer
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-const filterRulePath string = "../sample-filter-rules/"
-const json_file_path string = "../sample-json-files/"
+const filterRulePath string = "../../sample-filter-rules/"
+const json_file_path string = "../../sample-json-files/"
 
 func TestJsonRuleEngineToString(t *testing.T) {
 	/*
