@@ -1,7 +1,6 @@
 package main
 
 import (
-        "fmt"
         "strconv"
 )
 
@@ -215,5 +214,5 @@ func (lex *lexer) Lex(yylval *yySymType) int {
 }
 
 func (lex *lexer) Error(e string) {
-	fmt.Println("error:", e)
+	//fmt.Println("error:", e)
 }

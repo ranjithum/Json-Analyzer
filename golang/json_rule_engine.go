@@ -160,6 +160,14 @@ func ValidateAndGetJsonExpression(expr GenericExpression, json_data interface{})
 		}
 	case *NonJsonExpression:
 		final_value = json_data
+		for _, eachIndex := range e.m_listOfIdentifier[0].m_indices {
+			final_value = GetNextValueFromIndex(final_value, eachIndex)
+			if final_value == nil {
+				GetLogger().Info("NonJsonExpression : End of rule index.. ")
+				return nil
+			}
+		}
+
 		for _, eachIdentifier := range e.m_listOfIdentifier[1:] {
 			final_value = GetNextValueFromkey(final_value, eachIdentifier.m_expression)
 			if final_value == nil {
@@ -188,6 +196,8 @@ func (jR *JsonRuleEngine) ValidateAndGetJsonArray(expr GenericExpression) interf
 	var json_array interface{}
 	json_array = ValidateAndGetJsonExpression(expr, jR.m_decodedJson)
 
+	GetLogger().Debug(expr.ToString())
+	GetLogger().Debug(json_array)
 	switch json_array.(type) {
 	case []interface{}:
 		return json_array

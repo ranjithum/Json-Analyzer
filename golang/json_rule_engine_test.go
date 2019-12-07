@@ -38,7 +38,7 @@ func TestValidateAndGetExprValue(t *testing.T) {
 
 	data, err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		fmt.Println("File read error : ", err)
 		return
 	}
 	jR := JsonRuleEngine{}
@@ -61,7 +61,7 @@ func TestFilterTest1(t *testing.T) {
 	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_1.rule")
 
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		fmt.Println("File read error : ", err)
 		return
 	}
 
@@ -82,7 +82,7 @@ func TestFilterTest2(t *testing.T) {
 	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_2.rule")
 
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		fmt.Println("File read error : ", err)
 		return
 	}
 
@@ -102,7 +102,7 @@ func TestFilterTest2(t *testing.T) {
 func TestFilterTest3(t *testing.T) {
 	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_3.rule")
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		fmt.Println("File read error : ", err)
 		return
 	}
 
@@ -119,11 +119,33 @@ func TestFilterTest3(t *testing.T) {
 	}
 }
 
+func TestFilterTest4(t *testing.T) {
+	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_4.rule")
+
+	if err != nil {
+		fmt.Println("File read error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_2.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	// GetLogger().SetLogLevel(DEBUG_LEVEL)
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+}
+
 func TestFilterTestBackery(t *testing.T) {
 
 	jR, err := NewJsonRuleEngine(filterRulePath + "backery_filter.rule")
 	if err != nil {
-		fmt.Println("Json Parse error : ", err)
+		fmt.Println("File read error : ", err)
 		return
 	}
 
@@ -133,11 +155,83 @@ func TestFilterTestBackery(t *testing.T) {
 		return
 	}
 
-	//GetLogger().SetLogLevel(DEBUG_LEVEL)
+	// GetLogger().SetLogLevel(DEBUG_LEVEL)
 	got := jR.ParseJsonStream(json_stream)
 	wants := OK
 	if got != wants {
 		t.Errorf("wants : %v, Got : %v", wants, got)
 	}
+}
 
+func TestMedication(t *testing.T) {
+	jR, err := NewJsonRuleEngine(filterRulePath + "medication_filter.rule")
+	if err != nil {
+		fmt.Println("File read error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "medication.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	// GetLogger().SetLogLevel(DEBUG_LEVEL)
+	got := jR.ParseJsonStream(json_stream)
+	wants := RULE_MATCH_FAILURE
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+}
+
+func TestGreaterThanRules(t *testing.T) {
+	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_greaterThan.rule")
+	if err != nil {
+		fmt.Println("File read error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	// GetLogger().SetLogLevel(DEBUG_LEVEL)
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+}
+
+func TestLessThanRules(t *testing.T) {
+	jR, err := NewJsonRuleEngine(filterRulePath + "filter_test_lessThan.rule")
+	if err != nil {
+		fmt.Println("File read error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "diam_test_1.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	// GetLogger().SetLogLevel(DEBUG_LEVEL)
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+}
+
+func TestWrongFilter(t *testing.T) {
+
+	_, got := NewJsonRuleEngine(filterRulePath + "wrong_filter.rule")
+	wants := "Parsing rules failed"
+	if got.Error() != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+		return
+	}
 }

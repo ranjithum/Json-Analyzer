@@ -119,11 +119,11 @@ func (je *JsonExpression) GetValue() interface{} {
 	return nil
 }
 
-func (je *JsonExpression) OperatorPlusPlus() bool {
-	je.m_currentIndex += 1
-	switch arr_interface := je.m_jsonArray.(type) {
+func (ce *CommonExpression) OperatorPlusPlus() bool {
+	ce.m_currentIndex += 1
+	switch arr_interface := ce.m_jsonArray.(type) {
 	case []interface{}:
-		if len(arr_interface) < je.m_currentIndex+1 {
+		if len(arr_interface) < ce.m_currentIndex+1 {
 			return false
 		}
 		return true
@@ -162,10 +162,11 @@ func (nje *NonJsonExpression) GetValue() interface{} {
 	if nje.m_blockType == IF_BLOCK {
 		return nje.m_jsonDecoder.ValidateAndGetExprValueFromArray(nje, nje.m_parentBlock.GetJsonValueArray(nje.m_listOfIdentifier[0].m_expression))
 	} else {
+		nje.m_jsonArray = nje.m_jsonDecoder.ValidateAndGetJsonArrayFromArray(nje, nje.m_parentBlock.GetJsonValueArray(nje.m_listOfIdentifier[0].m_expression))
+		if nje.m_jsonArray != nil {
+			nje.m_currentIndex = 0
+			return true
+		}
 	}
 	return nil
-}
-
-func (nje *NonJsonExpression) OperatorPlusPlus() bool {
-	return true
 }
