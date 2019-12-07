@@ -79,6 +79,10 @@ func (ifblk *IfBlock) ToString() string {
 }
 
 func (ifblk *IfBlock) CleanUp() {
+	ifblk.m_lhsExpression.CleanUp()
+	for _, eachBlk := range *ifblk.m_codeBlocks {
+		eachBlk.CleanUp()
+	}
 }
 
 func (ifblk *IfBlock) SetParentBlock(blk GenericBlock) {
@@ -153,6 +157,10 @@ func (forblk *ForBlock) ToString() string {
 }
 
 func (forblk *ForBlock) CleanUp() {
+	forblk.m_rhsExpression.CleanUp()
+	for _, eachBlk := range *forblk.m_codeBlocks {
+		eachBlk.CleanUp()
+	}
 }
 
 func (forblk *ForBlock) SetJsonDecoder(dec JsonByteDecoderInterface) {

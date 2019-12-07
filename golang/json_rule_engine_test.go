@@ -118,3 +118,25 @@ func TestFilterTest3(t *testing.T) {
 		t.Errorf("wants : %v, Got : %v", wants, got)
 	}
 }
+
+func TestFilterTestBackery(t *testing.T) {
+
+	jR, err := NewJsonRuleEngine(filterRulePath + "backery_filter.rule")
+	if err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	json_stream, j_err := ioutil.ReadFile(json_file_path + "backery.json")
+	if j_err != nil {
+		fmt.Println("Json Parse error : ", err)
+		return
+	}
+
+	got := jR.ParseJsonStream(json_stream)
+	wants := OK
+	if got != wants {
+		t.Errorf("wants : %v, Got : %v", wants, got)
+	}
+
+}

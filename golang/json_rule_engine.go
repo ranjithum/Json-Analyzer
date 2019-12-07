@@ -126,6 +126,9 @@ func ValidateAndGetJsonExpression(expr GenericExpression, json_data interface{})
 			case map[string]interface{}:
 				actual_json = json_data
 				valid = true
+			case []interface{}:
+				actual_json = json_data
+				valid = true
 			}
 		}
 		if !valid {
