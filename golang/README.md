@@ -17,3 +17,65 @@ Below functions have been exposed
 > * **OK**					-> Json stream matched one of the rule(s)
 > * **JSON_STREAM_ERROR**	-> Fail to parse Json stream, Something wrong with the Json stream
 > * **RULE_MATCH_FAILURE**  -> Json stream doesn't match any given rule(s)
+
+### How to build ?
+
+Install necessary pacakges - ragel, goyacc
+```
+$ apt install ragel
+$ go get golang.org/x/tools/cmd/goyacc
+```
+
+Build the package
+```
+$ cd golang/janalyzer/
+$ make
+```
+> Note :- Above command have been tested on Ubuntu 18.04, where go env is already setup.
+
+### How to use ?
+```
+package main
+
+import (
+        "fmt"
+
+        "github.com/ranjithum/Json-Analyzer/golang/janalyzer"
+)
+
+func main() {
+        jR, j_err := janalyzer.NewJsonRuleEngine("./simpsons.character")
+
+        if j_err != nil {
+                fmt.Println(j_err)
+        }
+
+        var json_stream [5][]byte
+        json_stream[0] = []byte(`{"Name":"Homer Simpsons", "Age":36, "Gender":"Male"}`)
+        json_stream[1] = []byte(`{"Name":"Marge Simpsons", "Age":34, "Gender":"Female"}`)
+        json_stream[2] = []byte(`{"Name":"Bart Simpsons", "Age":10, "Gender":"Male"}`)
+        json_stream[3] = []byte(`{"Name":"Lisa Simpsons", "Age":8, "Gender":"Female"}`)
+        json_stream[4] = []byte(`{"Name":"Maggie Simpsons", "Age":1, "Gender":"Female"}`)
+
+        var errCode janalyzer.ErrorCode
+        for _, eachJsonByteStream := range json_stream {
+                errCode = jR.ParseJsonStream(eachJsonByteStream)
+                if errCode == janalyzer.OK {
+                        fmt.Println(string(eachJsonByteStream))
+                }
+        }
+
+}
+
+$ cat simpsons.character
+# if age is greater than equal to 10
+if json.Age >= 10 {
+        pp
+}
+
+$ go run .
+{"Name":"Homer Simpsons", "Age":36, "Gender":"Male"}
+{"Name":"Marge Simpsons", "Age":34, "Gender":"Female"}
+{"Name":"Bart Simpsons", "Age":10, "Gender":"Male"}
+
+```
