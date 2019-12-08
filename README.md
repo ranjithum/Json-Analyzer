@@ -55,10 +55,14 @@ Check these [sample rules](https://github.com/ranjithum/Json-Analyzer/tree/maste
 > * Supports comparison of basic data types like string, int64, bool, double.
 > * Supports more comparison operators like >, >=, <, <=, ==.
 
+## Supported features in version-3.0
+> * Supports implementation in [go](https://github.com/ranjithum/Json-Analyzer/tree/master/golang).
+
 ## Supported features in upcoming release
-> * **GOLANG** support.
 > * **PYTHON** support.
+> * Support for boolean operators (**and**/**or**).
 
 ## Some Caveats
 * Beggining of the line must not be empty.
 * Validation of the statements are not done.
+* Go implementation has issues while comparing int64 numbers
