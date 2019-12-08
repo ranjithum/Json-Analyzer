@@ -32,6 +32,8 @@
 *.app
 
 # Generated lex and yacc files
-json_analyzer.output
+*.output
 *.tab.*
 *.yy.*
+*_lex.go
+*_yacc.go
