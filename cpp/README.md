@@ -1,4 +1,4 @@
-## C++ implementation internally makes use of flex and yacc for parsing the rules and [RapidJSON](https://rapidjson.org/) for parsing the json stream.
+## C++ implementation internally makes use of flex and Bison for parsing the rules and [RapidJSON](https://rapidjson.org/) for parsing the json stream.
 
 **JsonRuleEngine** is the main class which maintains all the rules and runs the rules against json object.
 
@@ -65,7 +65,7 @@ int main()
                 std::cerr << e.what() << "\n";
                 return 1;
         }
-        auto IsAge26 = [jR] (std::string& json_str) -> bool
+        auto IsAgeLessThan30 = [jR] (std::string& json_str) -> bool
         {
                 ErrorCode retVal =  jR->ParseJsonStream(json_str.c_str());
                 return ErrorCode::OK == retVal ? true: false;
@@ -73,7 +73,7 @@ int main()
 
         for (auto& str : json_array)
         {
-                if(IsAge26(str))
+                if(IsAgeLessThan30(str))
                         std::cout << str << "\n";
         }
         delete jR;
@@ -81,8 +81,8 @@ int main()
 }
 
 $ cat GOT_CHAR.rule
-# Basically i m filtering any character who are aged 26
-if json.age == 26 {
+# Basically i m filtering any character who are aged < 30
+if json.age < 30 {
 pp
 }
 
