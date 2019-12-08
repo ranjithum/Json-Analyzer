@@ -8,7 +8,7 @@ JSON_GO_YACC_OUT = json_analyzer_yacc.go
 build: $(JSON_GO_LEX_OUT) $(JSON_GO_YACC_OUT)
 	go build
 
-test:
+test: $(JSON_GO_LEX_OUT) $(JSON_GO_YACC_OUT)
 	go test
 
 $(JSON_GO_YACC_OUT) : $(JSON_GO_YACC_IN)
